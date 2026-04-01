@@ -6,7 +6,8 @@ import Footer from '@/components/Footer';
 
 export default function Home() {
   return (
-    <main className="w-full flex-1 flex flex-col min-h-screen bg-black text-white">
+    <main className="w-full flex-1 flex flex-col min-h-screen text-white relative bg-transparent">
+
       <Navbar />
       <div className="flex-1 flex flex-col items-center">
         <Hero />

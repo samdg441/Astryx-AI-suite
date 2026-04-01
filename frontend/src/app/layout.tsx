@@ -6,6 +6,8 @@ export const metadata: Metadata = {
   description: 'Todas las inteligencias en un solo lugar',
 };
 
+import BackgroundVideo from '@/components/BackgroundVideo';
+
 export default function RootLayout({
   children,
 }: {
@@ -13,7 +15,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body className="antialiased min-h-screen flex flex-col items-center bg-black text-white">
+      <body className="antialiased min-h-screen flex flex-col items-center bg-black text-white relative">
+        <BackgroundVideo />
         {children}
       </body>
     </html>
