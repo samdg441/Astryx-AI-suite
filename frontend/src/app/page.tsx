@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import ToolGrid from '@/components/ToolGrid';
+import Footer from '@/components/Footer';
 
 export default function Home() {
   return (
@@ -11,6 +12,7 @@ export default function Home() {
         <Hero />
         <ToolGrid />
       </div>
+      <Footer />
     </main>
   );
 }
