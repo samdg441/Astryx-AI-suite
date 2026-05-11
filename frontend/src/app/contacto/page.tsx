@@ -1,0 +1,115 @@
+'use client';
+
+import React, { FormEvent, useState } from 'react';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import { Mail, MapPin } from 'lucide-react';
+
+export default function ContactoPage() {
+  const [nombre, setNombre] = useState('');
+  const [correo, setCorreo] = useState('');
+  const [mensaje, setMensaje] = useState('');
+
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    const subject = encodeURIComponent(`Consulta desde la web — ${nombre}`);
+    const body = encodeURIComponent(
+      `Nombre: ${nombre}\nCorreo: ${correo}\n\n${mensaje}`
+    );
+    window.location.href = `mailto:contacto@novaai.com?subject=${subject}&body=${body}`;
+  }
+
+  return (
+    <main className="w-full flex-1 flex flex-col min-h-screen bg-transparent text-white relative">
+      <Navbar />
+
+      <div className="flex-1 flex flex-col items-center px-4 pt-24 pb-16">
+        <div className="text-center max-w-3xl mb-12">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6">Contacto</h1>
+          <p className="text-gray-400 text-lg md:text-xl">
+            Escríbenos para demos, facturación o soporte. Respondemos en horario laboral.
+          </p>
+        </div>
+
+        <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="bg-[#111] border border-gray-800 rounded-2xl p-8 space-y-6">
+            <h2 className="text-xl font-bold">Datos de contacto</h2>
+            <div className="flex gap-4 text-gray-300">
+              <Mail className="w-5 h-5 shrink-0 mt-0.5 text-gray-400" />
+              <div>
+                <p className="text-sm text-gray-500 mb-1">Correo</p>
+                <a href="mailto:contacto@novaai.com" className="hover:text-white transition-colors">
+                  contacto@novaai.com
+                </a>
+              </div>
+            </div>
+            <div className="flex gap-4 text-gray-300">
+              <MapPin className="w-5 h-5 shrink-0 mt-0.5 text-gray-400" />
+              <div>
+                <p className="text-sm text-gray-500 mb-1">Oficina</p>
+                <p className="text-sm leading-relaxed">
+                  Operaciones remotas con cobertura en Latinoamérica.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <form
+            onSubmit={handleSubmit}
+            className="bg-[#111] border border-gray-800 rounded-2xl p-8 flex flex-col gap-4"
+          >
+            <h2 className="text-xl font-bold mb-2">Enviar mensaje</h2>
+            <label className="text-sm text-gray-400">
+              Nombre
+              <input
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                type="text"
+                required
+                placeholder="Tu nombre"
+                className="mt-1 w-full rounded-lg bg-[#0a0a0a] border border-gray-800 px-4 py-3 text-white placeholder:text-gray-600 focus:outline-none focus:border-gray-600"
+              />
+            </label>
+            <label className="text-sm text-gray-400">
+              Correo
+              <input
+                value={correo}
+                onChange={(e) => setCorreo(e.target.value)}
+                type="email"
+                required
+                placeholder="tu@correo.com"
+                className="mt-1 w-full rounded-lg bg-[#0a0a0a] border border-gray-800 px-4 py-3 text-white placeholder:text-gray-600 focus:outline-none focus:border-gray-600"
+              />
+            </label>
+            <label className="text-sm text-gray-400">
+              Mensaje
+              <textarea
+                value={mensaje}
+                onChange={(e) => setMensaje(e.target.value)}
+                required
+                rows={5}
+                placeholder="Cuéntanos en qué podemos ayudarte"
+                className="mt-1 w-full rounded-lg bg-[#0a0a0a] border border-gray-800 px-4 py-3 text-white placeholder:text-gray-600 focus:outline-none focus:border-gray-600 resize-y min-h-[120px]"
+              />
+            </label>
+            <button
+              type="submit"
+              className="mt-2 bg-[#cfcfcf] hover:bg-white text-black font-semibold py-3 rounded-lg transition-colors"
+            >
+              Abrir cliente de correo
+            </button>
+            <p className="text-xs text-gray-500">
+              Se abrirá tu aplicación de correo con el mensaje. Si prefieres, escribe directamente a{' '}
+              <a href="mailto:contacto@novaai.com" className="text-gray-300 hover:text-white underline">
+                contacto@novaai.com
+              </a>
+              .
+            </p>
+          </form>
+        </div>
+      </div>
+
+      <Footer />
+    </main>
+  );
+}

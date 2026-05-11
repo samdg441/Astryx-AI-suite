@@ -1,7 +1,14 @@
+'use client';
+
 import React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { ArrowRight, Mail } from 'lucide-react';
 
 export default function Footer() {
+  const pathname = usePathname();
+  const enPlanes = pathname === '/planes';
+
   return (
     <footer className="w-full flex flex-col items-center mt-24">
       {/* Call to Action Section */}
@@ -13,9 +20,13 @@ export default function Footer() {
           Únete a miles de profesionales y empresas que ya están potenciando su
           productividad con Nova IA Suite.
         </p>
-        <button className="flex items-center gap-2 bg-gray-200 hover:bg-white text-black font-semibold px-6 py-3 rounded-md transition-colors">
-          Ver planes y precios <ArrowRight className="w-4 h-4" />
-        </button>
+        <Link
+          href={enPlanes ? '/contacto' : '/planes'}
+          className="inline-flex items-center gap-2 bg-gray-200 hover:bg-white text-black font-semibold px-6 py-3 rounded-md transition-colors"
+        >
+          {enPlanes ? 'Comenzar' : 'Ver planes y precios'}
+          <ArrowRight className="w-4 h-4" />
+        </Link>
       </div>
 
       {/* Main Footer Content */}
