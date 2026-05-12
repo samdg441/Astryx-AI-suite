@@ -48,7 +48,7 @@ function safeInternalPath(raw: string | null): string | null {
 
 /**
  * Tras login/registro: `?redirect=` interna; si no, sin plan elegido → /planes;
- * plan gratuito → gestor (/); plan de pago → gestor (/).
+ * con plan (free o de pago) → /dashboard (experiencia tipo ChatGPT).
  */
 function postLoginDestination(planType: string | null | undefined, redirectParam: string | null): string {
   const custom = safeInternalPath(redirectParam);
@@ -56,8 +56,7 @@ function postLoginDestination(planType: string | null | undefined, redirectParam
   if (planType === null || planType === undefined || planType === "" || planType === "sin_plan") {
     return "/planes";
   }
-  if (planType === "free") return "/";
-  return "/";
+  return "/dashboard";
 }
 
 function mapError(err: unknown): string {

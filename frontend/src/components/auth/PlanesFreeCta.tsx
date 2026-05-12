@@ -29,7 +29,7 @@ export function PlanesFreeCta() {
           try {
             await chooseFreePlanRequest(token);
             await refreshUser();
-            router.push('/');
+            router.push('/dashboard');
             router.refresh();
           } catch (e) {
             setError(e instanceof Error ? e.message : 'Error');

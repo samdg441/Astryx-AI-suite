@@ -71,7 +71,7 @@ const planes: Plan[] = [
     features: [
       { text: 'Todo lo incluido en Pro', included: true },
       { text: 'Usuarios ilimitados', included: true },
-      { text: 'Dashboard de administración', included: true },
+      { text: 'Panel de administración', included: true },
       { text: 'Analytics y reportes avanzados', included: true },
       { text: 'Integraciones empresariales', included: true },
       { text: 'Soporte dedicado 24/7', included: true },

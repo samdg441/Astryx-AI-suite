@@ -35,10 +35,10 @@ function SuccessContent() {
         </p>
       )}
       <Link
-        href="/"
+        href="/dashboard"
         className="rounded-xl bg-white px-6 py-3 font-semibold text-black hover:bg-gray-200"
       >
-        Volver al inicio
+        Ir a Desarrollar
       </Link>
     </main>
   );
