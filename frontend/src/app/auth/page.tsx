@@ -4,8 +4,8 @@ import Navbar from '@/components/Navbar';
 import { AuthPagePanels } from '@/components/auth/AuthPagePanels';
 
 export const metadata: Metadata = {
-  title: 'Cuenta | Nova IA Suite',
-  description: 'Inicia sesión o crea tu cuenta en Nova IA Suite',
+  title: 'Cuenta | Astryx AI Suite',
+  description: 'Inicia sesión o crea tu cuenta en Astryx AI Suite',
 };
 
 export default function AuthPage() {

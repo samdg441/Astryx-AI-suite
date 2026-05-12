@@ -16,7 +16,7 @@ export default function ContactoPage() {
     const body = encodeURIComponent(
       `Nombre: ${nombre}\nCorreo: ${correo}\n\n${mensaje}`
     );
-    window.location.href = `mailto:contacto@novaai.com?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:contacto@astryx.ai?subject=${subject}&body=${body}`;
   }
 
   return (
@@ -38,8 +38,8 @@ export default function ContactoPage() {
               <Mail className="w-5 h-5 shrink-0 mt-0.5 text-gray-400" />
               <div>
                 <p className="text-sm text-gray-500 mb-1">Correo</p>
-                <a href="mailto:contacto@novaai.com" className="hover:text-white transition-colors">
-                  contacto@novaai.com
+                <a href="mailto:contacto@astryx.ai" className="hover:text-white transition-colors">
+                  contacto@astryx.ai
                 </a>
               </div>
             </div>
@@ -100,8 +100,8 @@ export default function ContactoPage() {
             </button>
             <p className="text-xs text-gray-500">
               Se abrirá tu aplicación de correo con el mensaje. Si prefieres, escribe directamente a{' '}
-              <a href="mailto:contacto@novaai.com" className="text-gray-300 hover:text-white underline">
-                contacto@novaai.com
+              <a href="mailto:contacto@astryx.ai" className="text-gray-300 hover:text-white underline">
+                contacto@astryx.ai
               </a>
               .
             </p>

@@ -236,7 +236,7 @@ export function AuthPagePanels() {
       <div
         className="relative w-full overflow-hidden rounded-2xl border border-gray-800 bg-[#111] shadow-none"
         role="region"
-        aria-label="Cuenta Nova IA Suite"
+        aria-label="Cuenta Astryx AI Suite"
       >
         {error && (
           <div className="absolute left-1/2 top-3 z-30 w-[calc(100%-1.5rem)] max-w-md -translate-x-1/2 rounded-lg border border-gray-700 bg-[#161616] px-3 py-2 text-center text-xs text-gray-200">
@@ -327,7 +327,7 @@ export function AuthPagePanels() {
               </LiquidMetalPanel>
               <div className={`${formShellBase} border-t border-gray-800 md:border-l md:border-t-0 md:border-gray-800`}>
                 <h2 className="mb-3 text-center text-3xl font-bold text-white sm:text-4xl">Crear cuenta</h2>
-                <p className="mb-4 text-center text-sm text-gray-500">Elige cómo usarás Nova IA Suite</p>
+                <p className="mb-4 text-center text-sm text-gray-500">Elige cómo usarás Astryx AI Suite</p>
                 <div className="mb-6 grid grid-cols-2 gap-3">
                   <button
                     type="button"

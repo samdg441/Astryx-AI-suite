@@ -18,7 +18,7 @@ export default function Footer() {
         </h2>
         <p className="mx-auto mb-10 max-w-3xl text-lg text-gray-400 sm:text-xl">
           Únete a miles de profesionales y empresas que ya están potenciando su
-          productividad con Nova IA Suite.
+          productividad con Astryx AI Suite.
         </p>
         <Link
           href={enPlanes ? '/auth' : '/planes'}
@@ -35,7 +35,7 @@ export default function Footer() {
           
           {/* Brand Info */}
           <div className="mb-12 md:mb-0 max-w-xs">
-            <h3 className="text-lg font-bold mb-4">Nova IA Suite</h3>
+            <h3 className="text-lg font-bold mb-4">Astryx AI Suite</h3>
             <p className="text-gray-400 text-sm leading-relaxed">
               Todas las inteligencias artificiales en un solo lugar.
               La plataforma líder en integración de IA.
@@ -88,7 +88,7 @@ export default function Footer() {
                </div>
                <div className="flex items-center gap-2 text-sm text-gray-400">
                  <Mail className="w-4 h-4" />
-                 <a href="mailto:contacto@novaai.com" className="hover:text-white transition-colors">contacto@novaai.com</a>
+                 <a href="mailto:contacto@astryx.ai" className="hover:text-white transition-colors">contacto@astryx.ai</a>
                </div>
             </div>
 
@@ -97,7 +97,7 @@ export default function Footer() {
 
         {/* Copyright */}
         <div className="mx-auto max-w-[90rem] border-t border-gray-800/60 px-5 pt-8 text-center text-xs text-gray-500 sm:px-8 md:px-10">
-          © 2026 Nova IA Suite. Todos los derechos reservados.
+          © 2026 Astryx AI Suite. Todos los derechos reservados.
         </div>
       </div>
     </footer>

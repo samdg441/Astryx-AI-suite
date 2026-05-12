@@ -17,7 +17,7 @@ export default function Hero() {
       </h1>
 
       <p className="mb-10 max-w-3xl text-lg leading-relaxed text-gray-400 sm:text-xl md:text-2xl md:leading-relaxed">
-        Nova IA Suite centraliza el acceso a las mejores inteligencias
+        Astryx AI Suite centraliza el acceso a las mejores inteligencias
         <br />
         artificiales del mercado. Una sola suscripción, infinitas posibilidades.
       </p>

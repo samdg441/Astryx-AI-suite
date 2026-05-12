@@ -23,13 +23,13 @@ export default function Nosotros() {
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">Nuestra Historia</h2>
           <div className="space-y-6 text-gray-400 leading-relaxed text-sm md:text-base">
             <p>
-              Nova IA Suite nació en 2024 de una necesidad real: las suscripciones a múltiples plataformas de IA estaban volviéndose prohibitivamente caras. Profesionales y empresas debían elegir entre ChatGPT, Midjourney, GitHub Copilot y docenas de otras herramientas, pagando cientos de dólares mensuales.
+              Astryx AI Suite nació en 2024 de una necesidad real: las suscripciones a múltiples plataformas de IA estaban volviéndose prohibitivamente caras. Profesionales y empresas debían elegir entre ChatGPT, Midjourney, GitHub Copilot y docenas de otras herramientas, pagando cientos de dólares mensuales.
             </p>
             <p>
               Nuestro equipo fundador, con décadas de experiencia en inteligencia artificial y desarrollo de software, vio la oportunidad de crear algo diferente: una plataforma unificada que centralizara el acceso a las mejores IAs del mercado bajo una sola suscripción asequible.
             </p>
             <p>
-              Hoy, Nova IA Suite sirve a miles de usuarios en toda Latinoamérica, desde freelancers hasta grandes corporaciones, democratizando el acceso a tecnología que antes era inalcanzable para muchos.
+              Hoy, Astryx AI Suite sirve a miles de usuarios en toda Latinoamérica, desde freelancers hasta grandes corporaciones, democratizando el acceso a tecnología que antes era inalcanzable para muchos.
             </p>
           </div>
         </div>

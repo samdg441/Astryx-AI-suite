@@ -22,7 +22,7 @@ export default function Navbar() {
           <Sparkles className="h-5 w-5 text-black" />
         </div>
         <span className="text-xl font-bold tracking-tight transition-colors hover:text-gray-300 sm:text-[22px]">
-          Nova IA Suite
+          Astryx AI Suite
         </span>
       </Link>
 
