@@ -1,9 +1,9 @@
-export type PlanType = 'free' | 'pro' | 'empresarial';
-
 const RANK: Record<string, number> = {
+  sin_plan: 0,
   free: 0,
-  pro: 1,
-  empresarial: 2,
+  basico: 1,
+  pro: 2,
+  empresarial: 3,
 };
 
 export function planRank(plan: string | undefined | null): number {
@@ -13,6 +13,6 @@ export function planRank(plan: string | undefined | null): number {
 
 /** true si el plan del usuario alcanza el mínimo exigido por la herramienta */
 export function canAccessPlan(userPlan: string | undefined | null, requiredPlan: string | undefined | null): boolean {
-  const req = requiredPlan ?? 'free';
+  const req = requiredPlan ?? "free";
   return planRank(userPlan) >= planRank(req);
 }

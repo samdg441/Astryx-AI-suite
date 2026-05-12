@@ -7,7 +7,7 @@ export type AuthUser = {
   name: string;
   email: string;
   globalRole: string;
-  planType: string;
+  planType: string | null;
   subscriptionStatus: string;
   stripeCustomerId?: string | null;
 };
@@ -123,4 +123,19 @@ export async function createCheckoutSessionRequest(
     throw new Error('Invalid checkout response');
   }
   return body.data.url;
+}
+
+export async function chooseFreePlanRequest(token: string): Promise<AuthUser> {
+  const res = await fetch(`${getApiBaseUrl()}/user/plan/gratis`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const body = (await parseJson(res)) as { data?: AuthUser; message?: string } | null;
+  if (!res.ok) {
+    throw new Error(body?.message ?? 'No se pudo activar el plan gratuito');
+  }
+  if (!body?.data) {
+    throw new Error('Invalid response');
+  }
+  return body.data;
 }

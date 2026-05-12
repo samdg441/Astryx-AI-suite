@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import { loginRequest, registerRequest, type AccountKind } from '@/lib/authApi';
@@ -32,6 +32,33 @@ const overlaySecondaryCta =
 
 const formShellBase =
   'flex h-full min-h-[560px] flex-1 flex-col overflow-hidden bg-[#111] px-8 py-12 text-white sm:px-10 md:px-12';
+
+/** Evita redirecciones abiertas: solo rutas relativas del mismo sitio. */
+function safeInternalPath(raw: string | null): string | null {
+  if (!raw) return null;
+  try {
+    const path = decodeURIComponent(raw.trim());
+    if (!path.startsWith('/') || path.startsWith('//')) return null;
+    if (path.includes('://')) return null;
+    return path;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Tras login/registro: `?redirect=` interna; si no, sin plan elegido → /planes;
+ * plan gratuito → gestor (/); plan de pago → gestor (/).
+ */
+function postLoginDestination(planType: string | null | undefined, redirectParam: string | null): string {
+  const custom = safeInternalPath(redirectParam);
+  if (custom) return custom;
+  if (planType === null || planType === undefined || planType === "" || planType === "sin_plan") {
+    return "/planes";
+  }
+  if (planType === "free") return "/";
+  return "/";
+}
 
 function mapError(err: unknown): string {
   if (err instanceof TypeError) {
@@ -141,6 +168,7 @@ function LiquidMetalPanel({ children }: { children: React.ReactNode }) {
 
 export function AuthPagePanels() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { setSession } = useAuth();
   const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -162,7 +190,7 @@ export function AuthPagePanels() {
       const data = await loginRequest(signInEmail, signInPassword);
       setSession(data);
       setSignInPassword('');
-      router.push('/');
+      router.push(postLoginDestination(data.user.planType, searchParams.get('redirect')));
       router.refresh();
     } catch (err) {
       setError(mapError(err));
@@ -186,7 +214,7 @@ export function AuthPagePanels() {
       setSession(data);
       setSignUpPassword('');
       setSignUpCompanyName('');
-      router.push('/');
+      router.push(postLoginDestination(data.user.planType, searchParams.get('redirect')));
       router.refresh();
     } catch (err) {
       setError(mapError(err));

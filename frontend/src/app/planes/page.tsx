@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { SubscribePlanButton } from '@/components/auth/SubscribePlanButton';
+import { PlanesFreeCta } from '@/components/auth/PlanesFreeCta';
 import { Check, X, Sparkles, Zap, Building2, type LucideIcon } from 'lucide-react';
 import type { CheckoutPriceTier } from '@/lib/authApi';
 
@@ -95,6 +96,7 @@ export default function PlanesPage() {
         </div>
 
         <div className="flex w-full max-w-[90rem] flex-col items-center">
+          <PlanesFreeCta />
           <div className="mb-10 inline-flex items-center gap-3 rounded-full border border-gray-700/90 bg-[#111]/95 py-2.5 pl-2.5 pr-6 text-base text-gray-300 shadow-sm backdrop-blur-sm">
             <span
               className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-gradient-to-br from-[#b0b0b0] via-[#8a8a8a] to-[#737373] shadow-[inset_0_1px_0_rgba(255,255,255,0.45)]"
