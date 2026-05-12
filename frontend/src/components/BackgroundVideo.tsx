@@ -1,12 +1,44 @@
+'use client';
+
+import React, { useEffect, useRef } from 'react';
+
+/** Velocidad del fondo (< 1 = más lento, más “cinemático”). */
+const PLAYBACK_RATE = 0.62;
+
 export default function BackgroundVideo() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const applyRate = () => {
+      try {
+        video.playbackRate = PLAYBACK_RATE;
+      } catch {
+        /* algunos navegadores pueden limitar playbackRate */
+      }
+    };
+
+    applyRate();
+    video.addEventListener('loadeddata', applyRate);
+    video.addEventListener('canplay', applyRate);
+
+    return () => {
+      video.removeEventListener('loadeddata', applyRate);
+      video.removeEventListener('canplay', applyRate);
+    };
+  }, []);
+
   return (
-    <div className="fixed inset-0 w-full h-full pointer-events-none" style={{ zIndex: -1 }}>
-      <video 
-        autoPlay 
-        loop 
-        muted 
-        playsInline 
-        className="w-full h-full object-cover opacity-60 mix-blend-screen"
+    <div className="pointer-events-none fixed inset-0 z-[-1] h-full w-full">
+      <video
+        ref={videoRef}
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="h-full w-full object-cover opacity-60 mix-blend-screen"
       >
         <source src="/Fondo_Astryx.mp4" type="video/mp4" />
       </video>

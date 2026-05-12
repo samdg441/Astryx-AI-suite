@@ -7,6 +7,7 @@ export const metadata: Metadata = {
 };
 
 import BackgroundVideo from '@/components/BackgroundVideo';
+import { AppProviders } from '@/components/providers/AppProviders';
 
 export default function RootLayout({
   children,
@@ -17,7 +18,7 @@ export default function RootLayout({
     <html lang="es">
       <body className="antialiased min-h-screen flex flex-col items-center bg-black text-white relative">
         <BackgroundVideo />
-        {children}
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );

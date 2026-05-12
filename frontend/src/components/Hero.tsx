@@ -1,34 +1,40 @@
 import React from 'react';
+import Link from 'next/link';
 import { ArrowRight, Sparkles } from 'lucide-react';
 
 export default function Hero() {
   return (
-    <div className="flex flex-col items-center text-center mt-24 mb-16 px-4">
-      {/* Top pill */}
-      <div className="flex items-center gap-2 rounded-full border border-gray-800 bg-black/50 backdrop-blur-sm px-4 py-2 mb-8">
-        <Sparkles className="w-4 h-4 text-gray-400" />
-        <span className="text-gray-400 text-sm">La revolución de la IA está aquí</span>
+    <div className="mx-auto mt-20 mb-16 flex w-full max-w-[90rem] flex-col items-center px-5 text-center sm:mt-24 sm:px-8 md:px-10">
+      <div className="mb-8 flex items-center gap-2 rounded-full border border-gray-800 bg-black/50 px-5 py-2.5 text-base backdrop-blur-sm">
+        <Sparkles className="h-5 w-5 shrink-0 text-gray-300" />
+        <span className="text-gray-400">La revolución de la IA está aquí</span>
       </div>
 
-      {/* Main Title */}
-      <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
-        Todas las inteligencias<br/>en un solo lugar
+      <h1 className="mb-6 text-5xl font-bold tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
+        Todas las inteligencias
+        <br />
+        en un solo lugar
       </h1>
 
-      {/* Subtitle */}
-      <p className="text-gray-400 text-lg md:text-xl max-w-2xl mb-10 leading-relaxed">
-        Nova IA Suite centraliza el acceso a las mejores inteligencias<br/>
+      <p className="mb-10 max-w-3xl text-lg leading-relaxed text-gray-400 sm:text-xl md:text-2xl md:leading-relaxed">
+        Nova IA Suite centraliza el acceso a las mejores inteligencias
+        <br />
         artificiales del mercado. Una sola suscripción, infinitas posibilidades.
       </p>
 
-      {/* Buttons */}
-      <div className="flex items-center gap-4">
-        <button className="flex items-center gap-2 bg-gray-200 hover:bg-white text-black font-semibold px-6 py-3 rounded-md transition-colors">
-          Explorar planes <ArrowRight className="w-4 h-4" />
-        </button>
-        <button className="bg-transparent border border-gray-800 hover:bg-gray-900 text-white font-semibold px-6 py-3 rounded-md transition-colors">
-          Conocer más
-        </button>
+      <div className="flex flex-wrap items-center justify-center gap-4">
+        <Link
+          href="/auth"
+          className="flex items-center gap-2 rounded-lg bg-[#cfcfcf] px-8 py-3.5 text-base font-semibold text-black transition-colors hover:bg-white"
+        >
+          Comenzar <ArrowRight className="h-5 w-5" />
+        </Link>
+        <Link
+          href="/planes"
+          className="rounded-lg border border-gray-800 bg-transparent px-8 py-3.5 text-base font-semibold text-white transition-colors hover:bg-gray-900"
+        >
+          Explorar planes
+        </Link>
       </div>
     </div>
   );

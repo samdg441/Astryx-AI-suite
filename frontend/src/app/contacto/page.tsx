@@ -23,15 +23,15 @@ export default function ContactoPage() {
     <main className="w-full flex-1 flex flex-col min-h-screen bg-transparent text-white relative">
       <Navbar />
 
-      <div className="flex-1 flex flex-col items-center px-4 pt-24 pb-16">
-        <div className="text-center max-w-3xl mb-12">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">Contacto</h1>
-          <p className="text-gray-400 text-lg md:text-xl">
+      <div className="flex flex-1 flex-col items-center px-5 pb-16 pt-24 sm:px-8 md:px-10">
+        <div className="mb-12 max-w-4xl text-center">
+          <h1 className="mb-6 text-4xl font-bold sm:text-5xl md:text-6xl lg:text-7xl">Contacto</h1>
+          <p className="text-lg text-gray-400 sm:text-xl md:text-2xl">
             Escríbenos para demos, facturación o soporte. Respondemos en horario laboral.
           </p>
         </div>
 
-        <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid w-full max-w-5xl grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10">
           <div className="bg-[#111] border border-gray-800 rounded-2xl p-8 space-y-6">
             <h2 className="text-xl font-bold">Datos de contacto</h2>
             <div className="flex gap-4 text-gray-300">

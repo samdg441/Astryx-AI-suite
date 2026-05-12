@@ -12,17 +12,17 @@ export default function Footer() {
   return (
     <footer className="w-full flex flex-col items-center mt-24">
       {/* Call to Action Section */}
-      <div className="w-full max-w-4xl mx-auto py-24 px-4 flex flex-col items-center text-center bg-[#111] rounded-3xl border border-gray-800 mb-24">
-        <h2 className="text-3xl md:text-5xl font-bold mb-6">
+      <div className="mx-auto mb-24 flex w-full max-w-5xl flex-col items-center rounded-3xl border border-gray-800 bg-[#111] px-5 py-24 text-center sm:px-8">
+        <h2 className="mb-6 text-3xl font-bold sm:text-4xl md:text-5xl lg:text-6xl">
           Comienza tu transformación con IA
         </h2>
-        <p className="text-gray-400 text-lg mb-10 max-w-2xl mx-auto">
+        <p className="mx-auto mb-10 max-w-3xl text-lg text-gray-400 sm:text-xl">
           Únete a miles de profesionales y empresas que ya están potenciando su
           productividad con Nova IA Suite.
         </p>
         <Link
-          href={enPlanes ? '/contacto' : '/planes'}
-          className="inline-flex items-center gap-2 bg-gray-200 hover:bg-white text-black font-semibold px-6 py-3 rounded-md transition-colors"
+          href={enPlanes ? '/auth' : '/planes'}
+          className="inline-flex items-center gap-2 rounded-lg bg-[#cfcfcf] px-8 py-3.5 text-base font-semibold text-black transition-colors hover:bg-white"
         >
           {enPlanes ? 'Comenzar' : 'Ver planes y precios'}
           <ArrowRight className="w-4 h-4" />
@@ -31,7 +31,7 @@ export default function Footer() {
 
       {/* Main Footer Content */}
       <div className="w-full bg-[#111] pt-16 pb-8 px-8 border-t border-gray-800">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between mb-16 px-4">
+        <div className="mx-auto mb-16 flex max-w-[90rem] flex-col justify-between px-5 sm:px-8 md:flex-row md:px-10">
           
           {/* Brand Info */}
           <div className="mb-12 md:mb-0 max-w-xs">
@@ -96,7 +96,7 @@ export default function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="text-center text-xs text-gray-500 max-w-6xl mx-auto border-t border-gray-800/60 pt-8">
+        <div className="mx-auto max-w-[90rem] border-t border-gray-800/60 px-5 pt-8 text-center text-xs text-gray-500 sm:px-8 md:px-10">
           © 2026 Nova IA Suite. Todos los derechos reservados.
         </div>
       </div>

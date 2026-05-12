@@ -16,39 +16,41 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="w-full h-24 px-8 md:px-12 flex justify-between items-center bg-[#0a0a0a] border-b border-[#222] z-50">
-      {/* Logo */}
-      <Link href="/" className="flex items-center gap-3 cursor-pointer">
-        <div className="bg-[#8a8a8a] p-2 rounded-[12px] flex items-center justify-center">
-          <Sparkles className="w-5 h-5 text-black" />
+    <nav className="relative z-50 flex h-24 w-full items-center justify-between border-b border-[#222] bg-[#0a0a0a] px-5 sm:px-8 md:px-10 lg:px-12">
+      <Link href="/" className="flex cursor-pointer items-center gap-3">
+        <div className="flex items-center justify-center rounded-[12px] bg-gradient-to-br from-[#b0b0b0] via-[#8a8a8a] to-[#737373] p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.45)]">
+          <Sparkles className="h-5 w-5 text-black" />
         </div>
-        <span className="font-bold text-[22px] tracking-tight hover:text-gray-300 transition-colors">Nova IA Suite</span>
+        <span className="text-xl font-bold tracking-tight transition-colors hover:text-gray-300 sm:text-[22px]">
+          Nova IA Suite
+        </span>
       </Link>
 
-      {/* Center Links */}
-      <div className="hidden md:flex gap-10 text-gray-400 font-medium text-[15px]">
+      <div className="hidden gap-8 text-[15px] font-medium text-gray-400 lg:gap-10 lg:text-base xl:gap-12 md:flex">
         {links.map((link) => {
           const isActive = pathname === link.path;
           return (
-            <Link 
-              key={link.path} 
-              href={link.path} 
-              className={`relative pb-2 hover:text-white transition-colors ${isActive ? 'text-white' : ''}`}
+            <Link
+              key={link.path}
+              href={link.path}
+              className={`relative pb-2 transition-colors hover:text-white ${isActive ? 'text-white' : ''}`}
             >
               {link.name}
               {isActive && (
-                <span className="absolute left-0 bottom-0 w-full h-[2px] bg-white rounded-full"></span>
+                <span className="absolute bottom-0 left-0 h-[2px] w-full rounded-full bg-white" />
               )}
             </Link>
           );
         })}
       </div>
 
-      {/* Call to action */}
       <div>
-        <button className="bg-[#cfcfcf] hover:bg-white text-black font-semibold px-6 py-2.5 rounded-lg transition-colors text-[15px]">
+        <Link
+          href="/auth"
+          className="rounded-lg bg-[#cfcfcf] px-6 py-2.5 text-[15px] font-semibold text-black transition-colors hover:bg-white sm:px-7 sm:py-3 sm:text-base"
+        >
           Comenzar
-        </button>
+        </Link>
       </div>
     </nav>
   );
