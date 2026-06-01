@@ -1,98 +1,17 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import axios from 'axios';
 import { Bot, Sparkles, Image as ImageIcon, Lock } from 'lucide-react';
-import { getApiBaseUrl } from '@/lib/apiBase';
-import { useAuth } from '@/components/auth/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
+import { usePublicTools } from '@/hooks/usePublicTools';
 import { canAccessPlan } from '@/lib/planAccess';
 import { SkeletonToolGrid } from '@/components/ui/Skeleton';
 import { buttonLinkClass } from '@/lib/buttonClasses';
-import { toast } from '@/lib/toast';
-
-interface Tool {
-  id: number;
-  name: string;
-  description: string;
-  category: string;
-  is_premium: boolean;
-  required_plan: string;
-}
-
-function normalizeToolsPayload(raw: unknown): Tool[] {
-  if (Array.isArray(raw)) {
-    return raw.map(mapApiToolToTool);
-  }
-  if (raw && typeof raw === 'object' && 'data' in raw) {
-    const inner = (raw as { data: unknown }).data;
-    if (Array.isArray(inner)) {
-      return inner.map(mapApiToolToTool);
-    }
-  }
-  return [];
-}
-
-function mapApiToolToTool(item: unknown): Tool {
-  const o = item as Record<string, unknown>;
-  const id = Number(o.id ?? 0);
-  const name = String(o.name ?? '');
-  const description = String(o.description ?? '');
-  const category = String(o.category ?? '');
-  const requiredRaw = o.required_plan ?? o.requiredPlan ?? 'free';
-  const required_plan = typeof requiredRaw === 'string' ? requiredRaw : 'free';
-  const isPremium =
-    typeof o.is_premium === 'boolean' ? o.is_premium : required_plan !== 'free';
-  return { id, name, description, category, is_premium: isPremium, required_plan };
-}
 
 export default function ToolGrid() {
   const { user, token } = useAuth();
-  const [tools, setTools] = useState<Tool[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchTools = async () => {
-      try {
-        const response = await axios.get(`${getApiBaseUrl()}/tools`, {
-          params: { page: 1, limit: 24, isActive: true },
-        });
-        const list = normalizeToolsPayload(response.data);
-        setTools(list);
-      } catch {
-        toast.info('Mostrando herramientas de demostración');
-        setTools([
-          {
-            id: 1,
-            name: 'ChatGPT Plus',
-            description: 'Acceso a GPT-4 y herramientas avanzadas',
-            category: 'Conversational',
-            is_premium: true,
-            required_plan: 'pro',
-          },
-          {
-            id: 2,
-            name: 'Midjourney',
-            description: 'Generación de imágenes de alta calidad',
-            category: 'Image',
-            is_premium: true,
-            required_plan: 'empresarial',
-          },
-          {
-            id: 3,
-            name: 'Claude 3 Opus',
-            description: 'El modelo más avanzado de Anthropic',
-            category: 'Conversational',
-            is_premium: false,
-            required_plan: 'free',
-          },
-        ]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    void fetchTools();
-  }, []);
+  const { tools, loading } = usePublicTools();
 
   const getIcon = (category: string) => {
     if (category === 'Image' || category === 'imagen')

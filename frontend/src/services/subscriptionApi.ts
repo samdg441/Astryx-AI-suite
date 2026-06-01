@@ -1,4 +1,4 @@
-import { getApiBaseUrl } from '@/lib/apiBase';
+import { apiFetch } from '@/lib/apiClient';
 
 export type SubscriptionStatusPayload = {
   planType: string | null;
@@ -8,24 +8,8 @@ export type SubscriptionStatusPayload = {
 
 export type MockPlanTarget = 'free' | 'basico' | 'pro' | 'empresarial';
 
-async function parseJson(res: Response): Promise<unknown> {
-  const t = await res.text();
-  if (!t) return null;
-  try {
-    return JSON.parse(t);
-  } catch {
-    return null;
-  }
-}
-
-export async function fetchSubscriptionStatus(token: string): Promise<SubscriptionStatusPayload> {
-  const res = await fetch(`${getApiBaseUrl()}/subscription/status`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  const body = (await parseJson(res)) as { data?: SubscriptionStatusPayload; message?: string } | null;
-  if (!res.ok) throw new Error(body?.message ?? 'No se pudo leer la suscripción');
-  if (!body?.data) throw new Error('Respuesta inválida');
-  return body.data;
+export function fetchSubscriptionStatus(token: string): Promise<SubscriptionStatusPayload> {
+  return apiFetch<SubscriptionStatusPayload>('/subscription/status', { token, auth: true });
 }
 
 export type MockActivateResponse = {
@@ -41,17 +25,14 @@ export type MockActivateResponse = {
   };
 };
 
-export async function mockActivatePlanRequest(token: string, targetPlan: MockPlanTarget): Promise<MockActivateResponse> {
-  const res = await fetch(`${getApiBaseUrl()}/subscription/mock-activate`, {
+export function mockActivatePlanRequest(
+  token: string,
+  targetPlan: MockPlanTarget
+): Promise<MockActivateResponse> {
+  return apiFetch<MockActivateResponse>('/subscription/mock-activate', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ targetPlan }),
+    token,
+    body: { targetPlan },
+    auth: true,
   });
-  const body = (await parseJson(res)) as { data?: MockActivateResponse; message?: string } | null;
-  if (!res.ok) throw new Error(body?.message ?? 'Mock checkout no disponible');
-  if (!body?.data?.token || !body.data.user) throw new Error('Respuesta inválida');
-  return body.data;
 }

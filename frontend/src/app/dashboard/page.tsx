@@ -2,18 +2,12 @@
 
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/components/auth/AuthContext';
+import { useRequireAuth } from '@/hooks/useRequireAuth';
 import { ChatLayout } from '@/components/dashboard/ChatLayout';
 
 export default function DashboardPage() {
-  const { token, user } = useAuth();
+  const { user, isReady } = useRequireAuth();
   const router = useRouter();
-
-  useEffect(() => {
-    if (!token) {
-      router.replace('/auth?redirect=/dashboard');
-    }
-  }, [token, router]);
 
   useEffect(() => {
     if (user && (user.planType === null || user.planType === undefined || user.planType === '')) {
@@ -21,7 +15,7 @@ export default function DashboardPage() {
     }
   }, [user, router]);
 
-  if (!token || !user) {
+  if (!isReady) {
     return (
       <div className="flex min-h-0 flex-1 items-center justify-center bg-black text-gray-400">
         <div className="flex flex-col items-center gap-3">
@@ -32,7 +26,7 @@ export default function DashboardPage() {
     );
   }
 
-  if (user.planType === null || user.planType === undefined || user.planType === '') {
+  if (user && (user.planType === null || user.planType === undefined || user.planType === '')) {
     return null;
   }
 

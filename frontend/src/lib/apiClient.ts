@@ -7,10 +7,24 @@ export type PaginationMeta = {
   totalPages: number;
 };
 
+export type ApiFieldIssue = { path: (string | number)[]; message: string };
+
 type ApiErrorBody = {
   message?: string;
-  issues?: { path: (string | number)[]; message: string }[];
+  issues?: ApiFieldIssue[];
 };
+
+export class ApiRequestError extends Error {
+  status: number;
+  issues?: ApiFieldIssue[];
+
+  constructor(message: string, status: number, issues?: ApiFieldIssue[]) {
+    super(message);
+    this.name = 'ApiRequestError';
+    this.status = status;
+    this.issues = issues;
+  }
+}
 
 let unauthorizedHandler: (() => void) | null = null;
 
@@ -72,7 +86,11 @@ export async function apiFetch<T>(
   const parsed = (await parseJson(response)) as ApiErrorBody & { data?: T } | null;
 
   if (!response.ok) {
-    throw new Error(getErrorMessage(parsed, `Error ${response.status}`));
+    throw new ApiRequestError(
+      getErrorMessage(parsed, `Error ${response.status}`),
+      response.status,
+      parsed?.issues
+    );
   }
 
   if (parsed && typeof parsed === 'object' && 'data' in parsed) {
@@ -108,7 +126,11 @@ export async function apiFetchList<T>(
   } | null;
 
   if (!response.ok) {
-    throw new Error(getErrorMessage(parsed, `Error ${response.status}`));
+    throw new ApiRequestError(
+      getErrorMessage(parsed, `Error ${response.status}`),
+      response.status,
+      parsed?.issues
+    );
   }
 
   return {

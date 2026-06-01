@@ -6,7 +6,16 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import { loginRequest, registerRequest, type AccountKind } from '@/lib/authApi';
-import { useAuth } from './AuthContext';
+import { ApiRequestError } from '@/lib/apiClient';
+import {
+  mapSignInIssues,
+  mapSignUpIssues,
+  validateSignInClient,
+  validateSignUpClient,
+  type SignInFieldErrors,
+  type SignUpFieldErrors,
+} from '@/lib/authFieldErrors';
+import { useAuth } from '@/hooks/useAuth';
 import { buttonLinkClass } from '@/lib/buttonClasses';
 
 function safeInternalPath(raw: string | null): string | null {
@@ -30,7 +39,7 @@ function postLoginDestination(planType: string | null | undefined, redirectParam
   return '/dashboard';
 }
 
-function mapError(err: unknown): string {
+function mapNetworkError(err: unknown): string {
   if (err instanceof TypeError) {
     return 'No se pudo conectar con el servidor. Comprueba que la API esté en ejecución.';
   }
@@ -38,11 +47,13 @@ function mapError(err: unknown): string {
     if (err.message === 'Failed to fetch') {
       return 'No se pudo conectar con el servidor. Comprueba que la API esté en ejecución.';
     }
-    if (err.message === 'Invalid email or password') {
-      return 'Correo o contraseña incorrectos.';
-    }
-    if (err.message === 'Email already registered') {
-      return 'Este correo ya está registrado.';
+    if (err instanceof ApiRequestError) {
+      if (err.message === 'Invalid email or password') {
+        return 'Correo o contraseña incorrectos.';
+      }
+      if (err.message === 'Email already registered') {
+        return 'Este correo ya está registrado.';
+      }
     }
     return err.message;
   }
@@ -57,6 +68,7 @@ function FloatingField({
   value,
   onChange,
   disabled,
+  error,
 }: {
   id: string;
   label: string;
@@ -65,6 +77,7 @@ function FloatingField({
   value: string;
   onChange: (v: string) => void;
   disabled?: boolean;
+  error?: string;
 }) {
   return (
     <div className="auth-field-wrap">
@@ -76,11 +89,18 @@ function FloatingField({
         disabled={disabled}
         onChange={(e) => onChange(e.target.value)}
         placeholder=" "
-        className="auth-field"
+        className={`auth-field ${error ? 'border-rose-400/70 ring-1 ring-rose-400/30' : ''}`}
+        aria-invalid={!!error}
+        aria-describedby={error ? `${id}-error` : undefined}
       />
       <label htmlFor={id} className="auth-field-label">
         {label}
       </label>
+      {error && (
+        <p id={`${id}-error`} className="mt-1.5 text-xs text-rose-400" role="alert">
+          {error}
+        </p>
+      )}
     </div>
   );
 }
@@ -115,7 +135,9 @@ export function AuthPagePanels() {
   const { setSession, token, user } = useAuth();
   const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [signInErrors, setSignInErrors] = useState<SignInFieldErrors>({});
+  const [signUpErrors, setSignUpErrors] = useState<SignUpFieldErrors>({});
 
   useEffect(() => {
     if (token && user) {
@@ -131,18 +153,48 @@ export function AuthPagePanels() {
   const [signUpAccountKind, setSignUpAccountKind] = useState<AccountKind>('PERSONA');
   const [signUpCompanyName, setSignUpCompanyName] = useState('');
 
+  function clearSignInField(key: keyof SignInFieldErrors) {
+    setSignInErrors((e) => {
+      const next = { ...e };
+      delete next[key];
+      return next;
+    });
+  }
+
+  function clearSignUpField(key: keyof SignUpFieldErrors) {
+    setSignUpErrors((e) => {
+      const next = { ...e };
+      delete next[key];
+      return next;
+    });
+  }
+
   async function handleSignIn(e: React.FormEvent) {
     e.preventDefault();
-    setError(null);
+    setFormError(null);
+    const clientErrors = validateSignInClient(signInEmail, signInPassword);
+    setSignInErrors(clientErrors);
+    if (Object.keys(clientErrors).length > 0) return;
+
     setLoading(true);
     try {
       const data = await loginRequest(signInEmail, signInPassword);
       setSession(data);
       setSignInPassword('');
+      setSignInErrors({});
       router.push(postLoginDestination(data.user.planType, searchParams.get('redirect')));
       router.refresh();
     } catch (err) {
-      setError(mapError(err));
+      if (err instanceof ApiRequestError && err.issues?.length) {
+        setSignInErrors(mapSignInIssues(err.issues));
+      } else if (err instanceof ApiRequestError && err.status === 401) {
+        setSignInErrors({
+          email: 'Correo o contraseña incorrectos.',
+          password: 'Correo o contraseña incorrectos.',
+        });
+      } else {
+        setFormError(mapNetworkError(err));
+      }
     } finally {
       setLoading(false);
     }
@@ -150,7 +202,17 @@ export function AuthPagePanels() {
 
   async function handleSignUp(e: React.FormEvent) {
     e.preventDefault();
-    setError(null);
+    setFormError(null);
+    const clientErrors = validateSignUpClient(
+      signUpName,
+      signUpEmail,
+      signUpPassword,
+      signUpAccountKind,
+      signUpCompanyName
+    );
+    setSignUpErrors(clientErrors);
+    if (Object.keys(clientErrors).length > 0) return;
+
     setLoading(true);
     try {
       const data = await registerRequest(
@@ -163,16 +225,24 @@ export function AuthPagePanels() {
       setSession(data);
       setSignUpPassword('');
       setSignUpCompanyName('');
+      setSignUpErrors({});
       router.push(postLoginDestination(data.user.planType, searchParams.get('redirect')));
       router.refresh();
     } catch (err) {
-      setError(mapError(err));
+      if (err instanceof ApiRequestError && err.issues?.length) {
+        setSignUpErrors(mapSignUpIssues(err.issues));
+      } else if (err instanceof ApiRequestError && err.status === 409) {
+        setSignUpErrors({ email: 'Este correo ya está registrado.' });
+      } else {
+        setFormError(mapNetworkError(err));
+      }
     } finally {
       setLoading(false);
     }
   }
 
   const promoCtaClass = buttonLinkClass('secondary', 'auth-promo-cta px-8 py-3.5 text-base');
+  const hasBanner = Boolean(formError);
 
   return (
     <div className="flex w-full max-w-[min(98vw,1280px)] flex-col items-stretch gap-5">
@@ -182,29 +252,32 @@ export function AuthPagePanels() {
       </Link>
 
       <div className="auth-card" role="region" aria-label="Cuenta Astryx AI Suite">
-        {error && <div className="auth-error-banner">{error}</div>}
+        {formError && <div className="auth-error-banner">{formError}</div>}
 
-        <div className={`relative w-full overflow-hidden ${error ? 'pt-14 md:pt-16' : ''}`}>
+        <div className={`relative w-full overflow-hidden ${hasBanner ? 'pt-14 md:pt-16' : ''}`}>
           <motion.div
             className="auth-slider-track"
             animate={{ x: isSignUp ? '-50%' : '0%' }}
             transition={{ type: 'spring', stiffness: 260, damping: 32 }}
           >
-            {/* Iniciar sesión */}
             <div className="flex w-1/2 min-w-[50%] flex-col md:flex-row">
               <div className="auth-form-panel border-b border-[var(--border-default)] md:border-b-0 md:border-r">
                 <h2 className="auth-form-title">Iniciar sesión</h2>
                 <SocialRow />
                 <p className="auth-form-sub">o usa tu cuenta</p>
-                <form onSubmit={handleSignIn} className="flex flex-1 flex-col gap-5">
+                <form onSubmit={handleSignIn} className="flex flex-1 flex-col gap-5" noValidate>
                   <FloatingField
                     id="signin-email"
                     label="Correo electrónico"
                     type="email"
                     autoComplete="email"
                     value={signInEmail}
-                    onChange={setSignInEmail}
+                    onChange={(v) => {
+                      setSignInEmail(v);
+                      clearSignInField('email');
+                    }}
                     disabled={loading}
+                    error={signInErrors.email}
                   />
                   <FloatingField
                     id="signin-password"
@@ -212,8 +285,12 @@ export function AuthPagePanels() {
                     type="password"
                     autoComplete="current-password"
                     value={signInPassword}
-                    onChange={setSignInPassword}
+                    onChange={(v) => {
+                      setSignInPassword(v);
+                      clearSignInField('password');
+                    }}
                     disabled={loading}
+                    error={signInErrors.password}
                   />
                   <a
                     href="#"
@@ -240,7 +317,8 @@ export function AuthPagePanels() {
                   type="button"
                   className={promoCtaClass}
                   onClick={() => {
-                    setError(null);
+                    setFormError(null);
+                    setSignInErrors({});
                     setSignUpAccountKind('PERSONA');
                     setSignUpCompanyName('');
                     setIsSignUp(true);
@@ -251,7 +329,6 @@ export function AuthPagePanels() {
               </PromoPanel>
             </div>
 
-            {/* Registro */}
             <div className="flex w-1/2 min-w-[50%] flex-col md:flex-row">
               <PromoPanel>
                 <h3 className="auth-promo-title">¡Bienvenido de nuevo!</h3>
@@ -262,7 +339,8 @@ export function AuthPagePanels() {
                   type="button"
                   className={promoCtaClass}
                   onClick={() => {
-                    setError(null);
+                    setFormError(null);
+                    setSignUpErrors({});
                     setIsSignUp(false);
                   }}
                 >
@@ -279,7 +357,8 @@ export function AuthPagePanels() {
                     onClick={() => {
                       setSignUpAccountKind('PERSONA');
                       setSignUpCompanyName('');
-                      setError(null);
+                      setFormError(null);
+                      clearSignUpField('companyName');
                     }}
                     className={`auth-segment-btn ${
                       signUpAccountKind === 'PERSONA'
@@ -310,7 +389,7 @@ export function AuthPagePanels() {
                 </div>
                 <SocialRow />
                 <p className="auth-form-sub">o usa tu correo para registrarte</p>
-                <form onSubmit={handleSignUp} className="flex flex-1 flex-col gap-5">
+                <form onSubmit={handleSignUp} className="flex flex-1 flex-col gap-5" noValidate>
                   {signUpAccountKind === 'EMPRESA' && (
                     <FloatingField
                       id="signup-company"
@@ -318,8 +397,12 @@ export function AuthPagePanels() {
                       type="text"
                       autoComplete="organization"
                       value={signUpCompanyName}
-                      onChange={setSignUpCompanyName}
+                      onChange={(v) => {
+                        setSignUpCompanyName(v);
+                        clearSignUpField('companyName');
+                      }}
                       disabled={loading}
+                      error={signUpErrors.companyName}
                     />
                   )}
                   <FloatingField
@@ -328,8 +411,12 @@ export function AuthPagePanels() {
                     type="text"
                     autoComplete="name"
                     value={signUpName}
-                    onChange={setSignUpName}
+                    onChange={(v) => {
+                      setSignUpName(v);
+                      clearSignUpField('name');
+                    }}
                     disabled={loading}
+                    error={signUpErrors.name}
                   />
                   <FloatingField
                     id="signup-email"
@@ -337,8 +424,12 @@ export function AuthPagePanels() {
                     type="email"
                     autoComplete="email"
                     value={signUpEmail}
-                    onChange={setSignUpEmail}
+                    onChange={(v) => {
+                      setSignUpEmail(v);
+                      clearSignUpField('email');
+                    }}
                     disabled={loading}
+                    error={signUpErrors.email}
                   />
                   <FloatingField
                     id="signup-password"
@@ -346,8 +437,12 @@ export function AuthPagePanels() {
                     type="password"
                     autoComplete="new-password"
                     value={signUpPassword}
-                    onChange={setSignUpPassword}
+                    onChange={(v) => {
+                      setSignUpPassword(v);
+                      clearSignUpField('password');
+                    }}
                     disabled={loading}
+                    error={signUpErrors.password}
                   />
                   <button
                     type="submit"

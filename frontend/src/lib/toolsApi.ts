@@ -1,4 +1,4 @@
-import { apiFetch, type PaginationMeta } from './apiClient';
+import { apiFetch, apiFetchList, type PaginationMeta } from './apiClient';
 
 export type PlanTier = 'free' | 'basico' | 'pro' | 'empresarial';
 
@@ -39,13 +39,7 @@ export async function listTools(params?: {
   if (params?.search) query.set('search', params.search);
   const qs = query.toString();
   const path = qs ? `/tools?${qs}` : '/tools';
-
-  const res = await fetch(`${(await import('./apiBase')).getApiBaseUrl()}${path}`);
-  const json = (await res.json()) as ListResponse;
-  if (!res.ok) {
-    throw new Error((json as { message?: string }).message ?? 'No se pudieron cargar las herramientas');
-  }
-  return json;
+  return apiFetchList<AiTool>(path) as Promise<ListResponse>;
 }
 
 export function createTool(token: string, input: AiToolInput): Promise<AiTool> {

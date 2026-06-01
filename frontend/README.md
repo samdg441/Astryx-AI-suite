@@ -41,19 +41,22 @@ src/
 │   ├── dashboard/    # Workspace (requiere sesión + plan)
 │   └── contacto/     # Formulario → POST /contact-leads
 ├── components/       # UI y layouts
+├── hooks/            # useAuth, useRequireAuth, usePublicTools
 ├── lib/              # API clients (authApi, toolsApi, contactApi, apiClient)
+├── services/         # subscriptionApi
 └── store/            # Estado del dashboard
 ```
 
 ## Funcionalidades
 
 - Login/registro con JWT y sesión en `localStorage`
-- Rutas privadas: `/dashboard` (client-side guard)
+- Rutas privadas: `/dashboard` y `/admin` (`middleware.ts` + cookie + `useRequireAuth`)
 - Panel admin `/admin` (solo `globalRole === admin`): CRUD herramientas IA y gestión de contactos
 - Formulario de contacto integrado con la API
 - Modo claro / oscuro
 - Página 404 personalizada
-- Redirect automático en 401 (sesión expirada)
+- Redirect automático en 401 (sesión expirada) vía `apiClient` en todas las llamadas autenticadas
+- Validación de auth con errores **debajo de cada campo** (login y registro)
 
 ## Usuario admin
 

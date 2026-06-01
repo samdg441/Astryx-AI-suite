@@ -10,6 +10,7 @@ import React, {
 } from 'react';
 import type { AuthUser } from '@/lib/authApi';
 import { fetchCurrentUser } from '@/lib/authApi';
+import { clearAuthCookie, setAuthCookie } from '@/lib/authCookies';
 
 const STORAGE_KEY = 'astryx_auth_token';
 const STORAGE_USER = 'astryx_auth_user';
@@ -41,6 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setToken(null);
       localStorage.removeItem(STORAGE_KEY);
       localStorage.removeItem(STORAGE_USER);
+      clearAuthCookie();
     }
   }, [token]);
 
@@ -51,6 +53,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (t && u) {
         setToken(t);
         setUser(JSON.parse(u) as AuthUser);
+        setAuthCookie(t);
       }
     } catch {
       localStorage.removeItem(STORAGE_KEY);
@@ -69,6 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setToken(payload.token);
     localStorage.setItem(STORAGE_KEY, payload.token);
     localStorage.setItem(STORAGE_USER, JSON.stringify(payload.user));
+    setAuthCookie(payload.token);
   }, []);
 
   const logout = useCallback(() => {
@@ -76,6 +80,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setToken(null);
     localStorage.removeItem(STORAGE_KEY);
     localStorage.removeItem(STORAGE_USER);
+    clearAuthCookie();
   }, []);
 
   const value = useMemo(

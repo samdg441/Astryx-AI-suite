@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Sparkles, Menu, Sun, Moon } from 'lucide-react';
-import { useAuth } from '@/components/auth/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { HeaderAuth } from '@/components/dashboard/HeaderAuth';
 import { SubscriptionBadge } from '@/components/dashboard/SubscriptionBadge';
 import { useTheme } from '@/components/theme/ThemeContext';
