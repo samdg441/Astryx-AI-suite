@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: 'Todas las inteligencias en un solo lugar',
 };
 
-import BackgroundVideo from '@/components/BackgroundVideo';
+import { AppBackground } from '@/components/theme/AppBackground';
 import { AppProviders } from '@/components/providers/AppProviders';
 
 export default function RootLayout({
@@ -15,10 +15,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es">
-      <body className="antialiased min-h-screen flex flex-col items-center bg-black text-white relative">
-        <BackgroundVideo />
-        <AppProviders>{children}</AppProviders>
+    <html lang="es" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('astryx_theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}})();`,
+          }}
+        />
+      </head>
+      <body className="relative min-h-screen antialiased text-heading">
+        <AppProviders>
+          <AppBackground />
+          <div className="app-content-layer">{children}</div>
+        </AppProviders>
       </body>
     </html>
   );

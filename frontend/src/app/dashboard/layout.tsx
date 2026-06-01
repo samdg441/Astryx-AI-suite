@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-black">
+    <div className="flex min-h-[100dvh] flex-col bg-transparent">
       <Navbar />
       <div className="flex min-h-0 flex-1 flex-col">{children}</div>
     </div>

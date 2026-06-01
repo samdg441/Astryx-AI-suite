@@ -7,6 +7,9 @@ import { Bot, Sparkles, Image as ImageIcon, Lock } from 'lucide-react';
 import { getApiBaseUrl } from '@/lib/apiBase';
 import { useAuth } from '@/components/auth/AuthContext';
 import { canAccessPlan } from '@/lib/planAccess';
+import { SkeletonToolGrid } from '@/components/ui/Skeleton';
+import { buttonLinkClass } from '@/lib/buttonClasses';
+import { toast } from '@/lib/toast';
 
 interface Tool {
   id: number;
@@ -39,9 +42,7 @@ function mapApiToolToTool(item: unknown): Tool {
   const requiredRaw = o.required_plan ?? o.requiredPlan ?? 'free';
   const required_plan = typeof requiredRaw === 'string' ? requiredRaw : 'free';
   const isPremium =
-    typeof o.is_premium === 'boolean'
-      ? o.is_premium
-      : required_plan !== 'free';
+    typeof o.is_premium === 'boolean' ? o.is_premium : required_plan !== 'free';
   return { id, name, description, category, is_premium: isPremium, required_plan };
 }
 
@@ -53,11 +54,13 @@ export default function ToolGrid() {
   useEffect(() => {
     const fetchTools = async () => {
       try {
-        const response = await axios.get(`${getApiBaseUrl()}/tools`);
+        const response = await axios.get(`${getApiBaseUrl()}/tools`, {
+          params: { page: 1, limit: 24, isActive: true },
+        });
         const list = normalizeToolsPayload(response.data);
         setTools(list);
-      } catch (error) {
-        console.error('API no disponible. Usando datos de prueba.');
+      } catch {
+        toast.info('Mostrando herramientas de demostración');
         setTools([
           {
             id: 1,
@@ -80,7 +83,7 @@ export default function ToolGrid() {
             name: 'Claude 3 Opus',
             description: 'El modelo más avanzado de Anthropic',
             category: 'Conversational',
-            is_premium: true,
+            is_premium: false,
             required_plan: 'free',
           },
         ]);
@@ -88,29 +91,30 @@ export default function ToolGrid() {
         setLoading(false);
       }
     };
-    fetchTools();
+    void fetchTools();
   }, []);
 
   const getIcon = (category: string) => {
-    if (category === 'Image') return <ImageIcon className="h-7 w-7 text-gray-300" />;
-    if (category === 'Conversational') return <Bot className="h-7 w-7 text-gray-300" />;
-    return <Sparkles className="h-7 w-7 text-gray-300" />;
+    if (category === 'Image' || category === 'imagen')
+      return <ImageIcon className="text-muted h-7 w-7" />;
+    if (category === 'Conversational' || category === 'texto')
+      return <Bot className="text-muted h-7 w-7" />;
+    return <Sparkles className="text-muted h-7 w-7" />;
   };
 
   return (
     <div className="mx-auto mt-20 w-full max-w-[90rem] px-5 pb-20 sm:px-8 md:px-10">
       <div className="mb-12 text-center">
-        <h2 className="mb-4 text-3xl font-bold sm:text-4xl md:text-5xl">Herramientas IA Premium</h2>
-        <p className="mx-auto max-w-3xl text-base text-gray-400 sm:text-lg">
+        <h2 className="text-heading mb-4 text-3xl font-bold sm:text-4xl md:text-5xl">
+          Herramientas IA Premium
+        </h2>
+        <p className="text-muted mx-auto max-w-3xl text-base sm:text-lg">
           Accede a las mejores inteligencias artificiales desde una única plataforma
         </p>
       </div>
 
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20">
-          <div className="mb-4 h-8 w-8 animate-spin rounded-full border-b-2 border-white"></div>
-          <p className="text-gray-500">Cargando herramientas...</p>
-        </div>
+        <SkeletonToolGrid count={6} />
       ) : (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
           {tools.map((tool) => {
@@ -120,28 +124,28 @@ export default function ToolGrid() {
             return (
               <div
                 key={tool.id}
-                className={`group relative cursor-pointer rounded-xl border border-[#222] bg-[#111111] p-7 transition-colors md:p-8 ${
-                  allowed ? 'hover:bg-[#1a1a1a]' : 'opacity-90'
+                className={`tool-card group relative cursor-pointer rounded-xl p-7 md:p-8 ${
+                  !allowed ? 'opacity-95' : ''
                 }`}
               >
                 {!allowed && (
-                  <div className="absolute inset-0 z-[1] flex flex-col items-center justify-center gap-3 rounded-xl bg-black/75 px-4 text-center backdrop-blur-[2px]">
-                    <Lock className="h-8 w-8 text-amber-200/90" aria-hidden />
-                    <p className="text-sm font-medium text-white">
+                  <div className="tool-lock-overlay">
+                    <Lock className="h-8 w-8 text-amber-500" aria-hidden />
+                    <p>
                       {token ? 'Tu plan no incluye esta herramienta.' : 'Inicia sesión y elige un plan.'}
                     </p>
                     <Link
                       href={token ? '/planes' : '/auth'}
-                      className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-black hover:bg-gray-200"
+                      className={buttonLinkClass('primary', 'px-4 py-2 text-sm')}
                     >
                       {token ? 'Ver planes' : 'Entrar'}
                     </Link>
                   </div>
                 )}
-                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-[#222] shadow-md transition-colors group-hover:bg-[#333]">
+                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl border border-[var(--border-default)] bg-[var(--bg-muted)]">
                   {getIcon(tool.category)}
                 </div>
-                <h3 className="mb-2 flex flex-wrap items-center gap-2 text-xl font-bold sm:text-2xl">
+                <h3 className="text-heading mb-2 flex flex-wrap items-center gap-2 text-xl font-bold sm:text-2xl">
                   {tool.name}
                   {tool.is_premium && (
                     <span className="rounded-sm bg-gradient-to-r from-amber-200 to-yellow-400 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-black">
@@ -149,7 +153,7 @@ export default function ToolGrid() {
                     </span>
                   )}
                 </h3>
-                <p className="text-base leading-relaxed text-gray-400">{tool.description}</p>
+                <p className="text-muted text-base leading-relaxed">{tool.description}</p>
               </div>
             );
           })}

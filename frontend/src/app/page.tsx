@@ -6,10 +6,9 @@ import Footer from '@/components/Footer';
 
 export default function Home() {
   return (
-    <main className="w-full flex-1 flex flex-col min-h-screen text-white relative bg-transparent">
-
+    <main className="relative flex min-h-screen w-full flex-1 flex-col bg-transparent [background:none]">
       <Navbar />
-      <div className="flex-1 flex flex-col items-center">
+      <div className="flex flex-1 flex-col items-center">
         <Hero />
         <ToolGrid />
       </div>
