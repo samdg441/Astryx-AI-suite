@@ -70,10 +70,13 @@ Cierra sesión y vuelve a entrar para ver el enlace **Admin** en la navbar.
 
 ## Despliegue (Vercel)
 
-1. Importa el repo y establece **Root Directory** = `frontend`
-2. Framework: Next.js
-3. Variable de entorno: `NEXT_PUBLIC_API_BASE_URL` = URL del API en Render
-4. En Render, actualiza `CORS_ORIGIN` y `FRONTEND_URL` con la URL de Vercel
+1. Importa el repo **Astryx-AI-suite** (raíz del monorepo).
+2. **Root Directory** = `frontend` (Settings → General). Si no, verás error **NOT_FOUND** en la URL.
+3. Variable de entorno: `NEXT_PUBLIC_API_BASE_URL` = `https://astryx-ai-suite-back.onrender.com/api/v1`
+4. En Render, actualiza `CORS_ORIGIN` y `FRONTEND_URL` con la URL de Vercel.
+5. Tras `git push`, Vercel redeploya solo.
+
+El repo incluye `vercel.json` en la raíz que apunta los comandos de build a `frontend/`.
 
 ## Demo en producción
 
