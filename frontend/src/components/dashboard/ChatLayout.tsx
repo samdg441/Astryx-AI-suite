@@ -16,20 +16,20 @@ export function ChatLayout() {
   const showHero = messages.length === 0;
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col overflow-hidden bg-transparent text-[var(--text-primary)]">
+    <div className="dashboard-shell flex min-h-0 flex-1 flex-col overflow-hidden">
       <div className="flex min-h-0 flex-1">
         <SidebarTools />
-        <main className="relative flex min-w-0 flex-1 flex-col bg-transparent">
+        <main className="relative flex min-w-0 flex-1 flex-col">
           <div className="relative z-[1] flex min-h-0 flex-1 flex-col">
             {showHero && <WelcomeHero onPick={(t) => sendUserFlow(t)} />}
             <AIChat />
           </div>
         </main>
-        <aside className="hidden w-72 shrink-0 border-l border-[var(--border-color)] bg-[var(--surface-primary)] p-4 text-xs text-[var(--text-muted)] xl:block">
-          <p className="mb-2 font-semibold uppercase tracking-wider text-[var(--text-muted)]">Contexto</p>
-          <p>
-            Panel opcional para archivos, memoria de proyecto y métricas. Conecta aquí tus
-            integraciones empresariales cuando avances el backend.
+        <aside className="dashboard-context hidden w-72 shrink-0 border-l p-4 text-xs xl:block">
+          <p className="mb-2 font-semibold uppercase tracking-wider">Contexto</p>
+          <p className="leading-relaxed">
+            Panel para archivos, memoria de proyecto y métricas. Próximo paso del roadmap: subida de
+            documentos e integración con el chat.
           </p>
         </aside>
       </div>

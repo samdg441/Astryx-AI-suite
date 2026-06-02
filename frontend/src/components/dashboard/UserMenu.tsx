@@ -36,7 +36,7 @@ export function UserMenu({ displayName, onOpenChange }: Props) {
   }, []);
 
   const item =
-    'flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-gray-200 transition hover:bg-white/[0.07] hover:text-white';
+    'user-menu-item flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition';
 
   return (
     <div ref={rootRef} className="relative">
@@ -44,16 +44,16 @@ export function UserMenu({ displayName, onOpenChange }: Props) {
         type="button"
         whileTap={{ scale: 0.98 }}
         onClick={() => setOpen((v) => !v)}
-        className="group flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] px-2 py-1.5 pr-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl transition hover:border-white/20 hover:bg-white/[0.08]"
+        className="user-menu-trigger group flex items-center gap-2 rounded-2xl px-2 py-1.5 pr-3 transition"
       >
         <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#b0b0b0] via-[#8a8a8a] to-[#737373] text-sm font-bold text-black shadow-[inset_0_1px_0_rgba(255,255,255,0.45)]">
           {displayName.slice(0, 1).toUpperCase()}
         </span>
-        <span className="max-w-[120px] truncate text-sm font-medium text-white sm:max-w-[160px]">
+        <span className="text-heading max-w-[120px] truncate text-sm font-medium sm:max-w-[160px]">
           {displayName}
         </span>
         <ChevronDown
-          className={`h-4 w-4 text-gray-400 transition group-hover:text-white ${open ? 'rotate-180' : ''}`}
+          className={`text-muted h-4 w-4 transition group-hover:text-[var(--text-heading)] ${open ? 'rotate-180' : ''}`}
         />
       </motion.button>
 
@@ -64,34 +64,34 @@ export function UserMenu({ displayName, onOpenChange }: Props) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.98 }}
             transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute right-0 z-[100] mt-2 w-64 origin-top-right rounded-2xl border border-white/10 bg-[#0a0a12]/90 p-2 shadow-[0_24px_80px_-20px_rgba(0,0,0,0.85)] backdrop-blur-2xl"
+            className="user-menu-dropdown absolute right-0 z-[100] mt-2 w-64 origin-top-right rounded-2xl p-2"
           >
-            <div className="mb-1 border-b border-white/5 px-2 pb-2 pt-1">
-              <p className="truncate text-xs text-gray-500">Sesión activa</p>
-              <p className="truncate text-sm font-medium text-white">{displayName}</p>
+            <div className="user-menu-divider mb-1 border-b px-2 pb-2 pt-1">
+              <p className="text-muted truncate text-xs">Sesión activa</p>
+              <p className="text-heading truncate text-sm font-medium">{displayName}</p>
             </div>
             <nav className="flex flex-col gap-0.5 py-1">
-              <Link href="/dashboard" className={item} onClick={() => setOpen(false)}>
-                <User className="h-4 w-4 text-gray-400" />
+              <Link href="/dashboard/perfil" className={item} onClick={() => setOpen(false)}>
+                <User className="user-menu-item-icon h-4 w-4" />
                 Mi perfil
               </Link>
-              <Link href="/planes" className={item} onClick={() => setOpen(false)}>
-                <CreditCard className="h-4 w-4 text-cyan-300" />
+              <Link href="/dashboard/suscripcion" className={item} onClick={() => setOpen(false)}>
+                <CreditCard className="user-menu-item-icon h-4 w-4" />
                 Mi suscripción
               </Link>
               <button type="button" className={item} onClick={() => setOpen(false)}>
-                <Settings className="h-4 w-4 text-gray-400" />
+                <Settings className="user-menu-item-icon h-4 w-4" />
                 Configuración
               </button>
               <button type="button" className={item} onClick={() => setOpen(false)}>
-                <History className="h-4 w-4 text-gray-400" />
+                <History className="user-menu-item-icon h-4 w-4" />
                 Historial
               </button>
             </nav>
-            <div className="mt-1 border-t border-white/5 pt-1">
+            <div className="user-menu-divider mt-1 border-t pt-1">
               <button
                 type="button"
-                className={`${item} text-rose-300 hover:text-rose-200`}
+                className={`${item} user-menu-logout`}
                 onClick={() => {
                   setOpen(false);
                   signOut();

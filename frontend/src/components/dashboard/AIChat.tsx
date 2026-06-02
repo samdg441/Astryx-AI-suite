@@ -4,6 +4,7 @@ import React, { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Send, Loader2 } from 'lucide-react';
 import { useDashboardStore } from '@/store/useDashboardStore';
+import { cn } from '@/lib/cn';
 
 export function AIChat() {
   const messages = useDashboardStore((s) => s.messages);
@@ -33,11 +34,10 @@ export function AIChat() {
             className={`mb-4 flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div
-              className={`max-w-[min(100%,720px)] rounded-2xl px-4 py-3 text-sm leading-relaxed md:text-[15px] ${
-                m.role === 'user'
-                  ? 'border border-white/10 bg-[#111] text-gray-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]'
-                  : 'border border-white/10 bg-[#0a0a0a] text-gray-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]'
-              }`}
+              className={cn(
+                'max-w-[min(100%,720px)] rounded-2xl px-4 py-3 text-sm leading-relaxed md:text-[15px]',
+                m.role === 'user' ? 'dashboard-bubble-user' : 'dashboard-bubble-ai'
+              )}
             >
               {m.content}
             </div>
@@ -45,8 +45,8 @@ export function AIChat() {
         ))}
         {isTyping && (
           <div className="mb-4 flex justify-start">
-            <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-[#0a0a0a] px-4 py-3 text-sm text-gray-400">
-              <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+            <div className="dashboard-bubble-typing flex items-center gap-2 rounded-2xl px-4 py-3 text-sm">
+              <Loader2 className="h-4 w-4 animate-spin opacity-60" />
               Astryx está pensando…
             </div>
           </div>
@@ -54,7 +54,7 @@ export function AIChat() {
         <div ref={bottomRef} />
       </div>
 
-      <div className="border-t border-[#222] bg-black p-3 md:p-4">
+      <div className="dashboard-chat-footer border-t p-3 md:p-4">
         <form
           className="mx-auto flex max-w-4xl gap-2"
           onSubmit={(e) => {
@@ -62,27 +62,25 @@ export function AIChat() {
             sendUserFlow(input);
           }}
         >
-          <div className="relative flex-1">
-            <textarea
-              rows={1}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder={placeholder}
-              className="max-h-40 min-h-[52px] w-full resize-none rounded-2xl border border-white/10 bg-[#0a0a0a] px-4 py-3.5 pr-4 text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] outline-none ring-0 transition placeholder:text-gray-600 focus:border-white/25 md:text-[15px]"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  sendUserFlow(input);
-                }
-              }}
-            />
-          </div>
+          <textarea
+            rows={1}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={placeholder}
+            className="dashboard-chat-input max-h-40 min-h-[52px] w-full flex-1 resize-none rounded-2xl px-4 py-3.5 text-sm transition md:text-[15px]"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendUserFlow(input);
+              }
+            }}
+          />
           <motion.button
             type="submit"
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             disabled={!input.trim() || isTyping}
-            className="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-2xl bg-white text-black shadow-none transition hover:bg-gray-200 disabled:opacity-40"
+            className="dashboard-send-btn flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-2xl transition disabled:opacity-40"
           >
             <Send className="h-5 w-5" />
           </motion.button>

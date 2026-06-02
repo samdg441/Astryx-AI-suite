@@ -16,6 +16,7 @@ import { SIDEBAR_CATALOG, type ToolMinPlan } from '@/lib/dashboard/sidebarCatalo
 import { useAuth } from '@/components/auth/AuthContext';
 import { canAccessPlan } from '@/lib/planAccess';
 import { useDashboardStore } from '@/store/useDashboardStore';
+import { cn } from '@/lib/cn';
 
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   development: Code2,
@@ -28,10 +29,10 @@ const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 function badgeClass(min: ToolMinPlan): string {
-  if (min === 'free') return 'border-white/15 bg-white/[0.06] text-gray-300';
-  if (min === 'basico') return 'border-cyan-500/30 bg-cyan-500/10 text-cyan-200';
-  if (min === 'pro') return 'border-violet-500/40 bg-violet-500/15 text-violet-100';
-  return 'border-amber-400/35 bg-amber-500/10 text-amber-100';
+  if (min === 'free') return 'dash-plan-badge--free';
+  if (min === 'basico') return 'dash-plan-badge--basico';
+  if (min === 'pro') return 'dash-plan-badge--pro';
+  return 'dash-plan-badge--empresarial';
 }
 
 function badgeLabel(min: ToolMinPlan): string {
@@ -49,10 +50,12 @@ export function SidebarTools() {
   const openPremium = useDashboardStore((s) => s.openPremiumModal);
 
   return (
-    <aside className="flex w-[min(100%,280px)] shrink-0 flex-col border-r border-[#222] bg-[#0a0a0a]/95 backdrop-blur-xl">
-      <div className="border-b border-[#222] px-4 py-4">
-        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-gray-500">Categorías</p>
-        <p className="text-sm font-semibold text-white">Herramientas IA</p>
+    <aside className="dashboard-sidebar flex w-[min(100%,280px)] shrink-0 flex-col border-r">
+      <div className="dashboard-sidebar-header border-b px-4 py-4">
+        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--dash-text-faint)]">
+          Categorías
+        </p>
+        <p className="text-sm font-semibold text-[var(--dash-text)]">Herramientas IA</p>
       </div>
       <div className="custom-scrollbar flex-1 overflow-y-auto px-2 py-3">
         {SIDEBAR_CATALOG.map((cat) => {
@@ -63,9 +66,9 @@ export function SidebarTools() {
               <button
                 type="button"
                 onClick={() => setOpenCat(expanded ? null : cat.id)}
-                className="flex w-full items-center gap-2 rounded-xl px-2 py-2.5 text-left text-sm text-gray-300 transition hover:bg-white/[0.05] hover:text-white"
+                className="dashboard-sidebar-cat-btn flex w-full items-center gap-2 rounded-xl px-2 py-2.5 text-left text-sm transition"
               >
-                <Icon className="h-4 w-4 shrink-0 text-gray-400" />
+                <Icon className="h-4 w-4 shrink-0 opacity-60" />
                 <span className="flex-1 font-medium">{cat.label}</span>
                 <ChevronRight className={`h-4 w-4 transition ${expanded ? 'rotate-90' : ''}`} />
               </button>
@@ -77,7 +80,7 @@ export function SidebarTools() {
                     exit={{ height: 0, opacity: 0 }}
                     className="overflow-hidden pl-2"
                   >
-                    <div className="space-y-1 border-l border-white/10 py-1 pl-3">
+                    <div className="dashboard-sidebar-tree space-y-1 border-l py-1 pl-3">
                       {cat.tools.map((t) => {
                         const allowed = canAccessPlan(plan, t.minPlan);
                         return (
@@ -91,19 +94,20 @@ export function SidebarTools() {
                               }
                               selectTool(t.id, t.name);
                             }}
-                            className="group flex w-full flex-col rounded-xl px-2 py-2 text-left transition hover:bg-white/[0.05]"
+                            className="dashboard-sidebar-tool group flex w-full flex-col rounded-xl px-2 py-2 text-left transition"
                           >
                             <span className="flex items-center gap-2">
-                              <span className="text-sm font-medium text-white group-hover:text-gray-100">
-                                {t.name}
-                              </span>
+                              <span className="text-sm font-medium">{t.name}</span>
                               <span
-                                className={`ml-auto rounded-md border px-1.5 py-0 text-[9px] font-bold uppercase ${badgeClass(t.minPlan)}`}
+                                className={cn(
+                                  'ml-auto rounded-md border px-1.5 py-0 text-[9px] font-bold uppercase',
+                                  badgeClass(t.minPlan)
+                                )}
                               >
                                 {badgeLabel(t.minPlan)}
                               </span>
                             </span>
-                            <span className="mt-0.5 text-[11px] leading-snug text-gray-500 group-hover:text-gray-400">
+                            <span className="dashboard-sidebar-tool-desc mt-0.5 text-[11px] leading-snug">
                               {t.shortDesc}
                             </span>
                           </button>

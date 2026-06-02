@@ -3,8 +3,7 @@
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
-import { PLAN_DETAILS, planLabel } from '@/lib/planCatalog';
-import type { PaidPlan } from '@/lib/planCatalog';
+import { getPlanInfo, planLabel } from '@/lib/planCatalog';
 import {
   MOCK_CHECKOUT_DELAY_MS,
   parsePaymentMethod,
@@ -48,8 +47,7 @@ export function useMockCheckout() {
         setSession({ token: newToken, user });
         toast.dismiss(toastId);
 
-        const label =
-          plan in PLAN_DETAILS ? PLAN_DETAILS[plan as PaidPlan].label : planLabel(plan);
+        const label = plan === 'free' ? planLabel(plan) : getPlanInfo(plan).label;
         toast.success('¡Pago confirmado!', {
           description: `Plan ${label} activado. Tus herramientas premium ya están disponibles.`,
         });
