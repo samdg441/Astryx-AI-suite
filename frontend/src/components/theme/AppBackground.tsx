@@ -20,26 +20,13 @@ function useLiteBackground() {
   return lite;
 }
 
-/** Fondo dinámico: video espacial (oscuro) o nebulosa CSS (claro). */
+/** Fondo dinámico: video espacial (oscuro) o gradiente estático (claro, sin blur animado). */
 export function AppBackground() {
   const { theme } = useTheme();
   const lite = useLiteBackground();
 
   if (theme === 'light') {
-    if (lite) {
-      return <div className="app-nebula-bg app-nebula-bg--lite" aria-hidden />;
-    }
-    return (
-      <div className="app-nebula-bg" aria-hidden>
-        <div className="nebula-stars" />
-        <div className="nebula-orbs">
-          <div className="nebula-orb nebula-orb--cyan" />
-          <div className="nebula-orb nebula-orb--violet" />
-          <div className="nebula-orb nebula-orb--lavender nebula-orb--desktop-only" />
-          <div className="nebula-orb nebula-orb--cyan-soft nebula-orb--desktop-only" />
-        </div>
-      </div>
-    );
+    return <div className="app-nebula-bg app-nebula-bg--lite" aria-hidden />;
   }
 
   return (

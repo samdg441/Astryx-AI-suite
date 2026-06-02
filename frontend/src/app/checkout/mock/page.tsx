@@ -5,7 +5,7 @@ export default function MockCheckoutPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center bg-[#030308] text-gray-500">Cargando checkout…</div>
+        <div className="text-muted flex min-h-screen items-center justify-center">Cargando checkout…</div>
       }
     >
       <MockCheckoutClient />

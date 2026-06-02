@@ -1,10 +1,10 @@
-import { toast as sonnerToast } from 'sonner';
+import { toast as sonnerToast, type ExternalToast } from 'sonner';
 
 export const toast = {
-  success: (message: string) => sonnerToast.success(message),
-  error: (message: string) => sonnerToast.error(message),
-  info: (message: string) => sonnerToast.info(message),
-  loading: (message: string) => sonnerToast.loading(message),
+  success: (message: string, data?: ExternalToast) => sonnerToast.success(message, data),
+  error: (message: string, data?: ExternalToast) => sonnerToast.error(message, data),
+  info: (message: string, data?: ExternalToast) => sonnerToast.info(message, data),
+  loading: (message: string, data?: ExternalToast) => sonnerToast.loading(message, data),
   promise: sonnerToast.promise,
   dismiss: sonnerToast.dismiss,
 };

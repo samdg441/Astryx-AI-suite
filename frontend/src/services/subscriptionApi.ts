@@ -25,14 +25,20 @@ export type MockActivateResponse = {
   };
 };
 
+export type MockPaymentMethodPayload = {
+  last4: string;
+  brand: 'visa' | 'mastercard' | 'amex';
+};
+
 export function mockActivatePlanRequest(
   token: string,
-  targetPlan: MockPlanTarget
+  targetPlan: MockPlanTarget,
+  paymentMethod?: MockPaymentMethodPayload
 ): Promise<MockActivateResponse> {
   return apiFetch<MockActivateResponse>('/subscription/mock-activate', {
     method: 'POST',
     token,
-    body: { targetPlan },
+    body: { targetPlan, paymentMethod },
     auth: true,
   });
 }
