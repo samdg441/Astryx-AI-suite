@@ -18,6 +18,8 @@ const STORAGE_USER = 'astryx_auth_user';
 type AuthContextValue = {
   user: AuthUser | null;
   token: string | null;
+  /** true tras leer localStorage en el cliente (evita redirecciones prematuras en /auth). */
+  isHydrated: boolean;
   setSession: (payload: { user: AuthUser; token: string }) => void;
   logout: () => void;
   /** Sincroniza plan/suscripción con el servidor (tras checkout o webhook). */
@@ -29,6 +31,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   const refreshUser = useCallback(async () => {
     const t = token ?? (typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null);
@@ -54,10 +57,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setToken(t);
         setUser(JSON.parse(u) as AuthUser);
         setAuthCookie(t);
+      } else if (t) {
+        localStorage.removeItem(STORAGE_KEY);
+        clearAuthCookie();
       }
     } catch {
       localStorage.removeItem(STORAGE_KEY);
       localStorage.removeItem(STORAGE_USER);
+      clearAuthCookie();
+    } finally {
+      setIsHydrated(true);
     }
   }, []);
 
@@ -87,11 +96,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     () => ({
       user,
       token,
+      isHydrated,
       setSession,
       logout,
       refreshUser,
     }),
-    [user, token, setSession, logout, refreshUser]
+    [user, token, isHydrated, setSession, logout, refreshUser]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

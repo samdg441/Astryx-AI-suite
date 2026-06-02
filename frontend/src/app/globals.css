@@ -201,6 +201,8 @@ html[data-theme='light'] .bg-video-layer {
   z-index: 0;
   overflow: hidden;
   background-color: #f8fafc;
+  contain: strict;
+  transform: translateZ(0);
   /* Capa base: manchas de color siempre visibles (no dependen solo del blur) */
   background-image:
     radial-gradient(ellipse 55% 45% at 12% 18%, rgba(56, 189, 248, 0.42) 0%, transparent 58%),
@@ -208,7 +210,28 @@ html[data-theme='light'] .bg-video-layer {
     radial-gradient(ellipse 45% 40% at 55% 88%, rgba(124, 58, 237, 0.22) 0%, transparent 52%),
     radial-gradient(ellipse 35% 30% at 72% 68%, rgba(56, 189, 248, 0.2) 0%, transparent 50%);
   background-size: 140% 140%;
-  animation: nebula-base-pan 22s ease-in-out infinite alternate;
+  animation: nebula-base-pan 32s ease-in-out infinite alternate;
+}
+
+/* Modo ligero: sin animaciones ni orbes (móvil / reduced motion) */
+.app-nebula-bg--lite {
+  animation: none !important;
+  background-size: 100% 100%;
+  background-image:
+    radial-gradient(ellipse 60% 50% at 15% 20%, rgba(56, 189, 248, 0.35) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 45% at 85% 25%, rgba(167, 139, 250, 0.32) 0%, transparent 58%),
+    linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+}
+
+.app-nebula-bg--lite::before,
+.app-nebula-bg--lite::after {
+  display: none;
+}
+
+.bg-video-layer--lite {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(88, 28, 135, 0.35) 0%, transparent 55%),
+    linear-gradient(180deg, #030712 0%, #0f172a 50%, #020617 100%);
 }
 
 /* Velo de profundidad + textura suave */
@@ -236,7 +259,7 @@ html[data-theme='light'] .bg-video-layer {
     rgba(56, 189, 248, 0.05) 240deg,
     transparent 360deg
   );
-  animation: nebula-rotate 48s linear infinite;
+  animation: nebula-rotate 72s linear infinite;
   pointer-events: none;
 }
 
@@ -260,8 +283,22 @@ html[data-theme='light'] .bg-video-layer {
 .nebula-orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(90px);
-  will-change: transform, opacity;
+  filter: blur(64px);
+  will-change: transform;
+}
+
+.nebula-orb--desktop-only {
+  display: none;
+}
+
+@media (min-width: 1025px) and (hover: hover) {
+  .nebula-orb {
+    filter: blur(72px);
+  }
+
+  .nebula-orb--desktop-only {
+    display: block;
+  }
 }
 
 /* Núcleo más saturado + halo exterior */
@@ -320,8 +357,37 @@ html[data-theme='light'] .bg-video-layer {
   left: -4%;
   background: radial-gradient(circle, rgba(14, 165, 233, 0.8) 0%, transparent 68%);
   opacity: 0.5;
-  filter: blur(100px);
-  animation: nebula-drift-d 26s ease-in-out infinite reverse;
+  filter: blur(72px);
+  animation: nebula-drift-d 36s ease-in-out infinite reverse;
+}
+
+@media (max-width: 1024px), (prefers-reduced-motion: reduce), (hover: none) and (pointer: coarse) {
+  .app-nebula-bg:not(.app-nebula-bg--lite),
+  .app-nebula-bg::after,
+  .nebula-orb,
+  .nebula-stars {
+    animation: none !important;
+  }
+
+  .nebula-orbs {
+    display: none;
+  }
+
+  .nebula-stars {
+    display: none;
+  }
+
+  html[data-theme='light'] .glass-panel,
+  html[data-theme='light'] .navbar-glass,
+  html[data-theme='light'] .auth-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  html[data-theme='dark'] .glass-panel {
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
 }
 
 @keyframes nebula-base-pan {

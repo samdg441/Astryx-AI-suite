@@ -2,7 +2,6 @@
 
 import React, { useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronDown,
@@ -12,7 +11,7 @@ import {
   Settings,
   History,
 } from 'lucide-react';
-import { useAuth } from '@/components/auth/AuthContext';
+import { useLogout } from '@/hooks/useLogout';
 
 type Props = {
   displayName: string;
@@ -22,8 +21,7 @@ type Props = {
 export function UserMenu({ displayName, onOpenChange }: Props) {
   const [open, setOpen] = React.useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
-  const { logout } = useAuth();
+  const signOut = useLogout();
 
   useEffect(() => {
     onOpenChange?.(open);
@@ -96,8 +94,7 @@ export function UserMenu({ displayName, onOpenChange }: Props) {
                 className={`${item} text-rose-300 hover:text-rose-200`}
                 onClick={() => {
                   setOpen(false);
-                  logout();
-                  router.push('/auth');
+                  signOut();
                 }}
               >
                 <LogOut className="h-4 w-4" />

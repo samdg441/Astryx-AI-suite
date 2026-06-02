@@ -24,9 +24,19 @@ export default function BackgroundVideo() {
     video.addEventListener('loadeddata', applyRate);
     video.addEventListener('canplay', applyRate);
 
+    const onVisibility = () => {
+      if (document.hidden) {
+        video.pause();
+      } else {
+        void video.play().catch(() => undefined);
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+
     return () => {
       video.removeEventListener('loadeddata', applyRate);
       video.removeEventListener('canplay', applyRate);
+      document.removeEventListener('visibilitychange', onVisibility);
     };
   }, []);
 
@@ -38,6 +48,7 @@ export default function BackgroundVideo() {
         loop
         muted
         playsInline
+        preload="metadata"
         className="h-full w-full object-cover opacity-60 mix-blend-screen"
       >
         <source src="/Fondo_Astryx.mp4" type="video/mp4" />

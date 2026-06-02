@@ -132,7 +132,7 @@ function PromoPanel({ children }: { children: React.ReactNode }) {
 export function AuthPagePanels() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { setSession, token, user } = useAuth();
+  const { setSession, token, user, isHydrated } = useAuth();
   const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -140,10 +140,10 @@ export function AuthPagePanels() {
   const [signUpErrors, setSignUpErrors] = useState<SignUpFieldErrors>({});
 
   useEffect(() => {
-    if (token && user) {
-      router.replace(postLoginDestination(user.planType, searchParams.get('redirect')));
-    }
-  }, [token, user, router, searchParams]);
+    if (!isHydrated || !token || !user) return;
+    router.replace(postLoginDestination(user.planType, searchParams.get('redirect')));
+    router.refresh();
+  }, [isHydrated, token, user, router, searchParams]);
 
   const [signInEmail, setSignInEmail] = useState('');
   const [signInPassword, setSignInPassword] = useState('');

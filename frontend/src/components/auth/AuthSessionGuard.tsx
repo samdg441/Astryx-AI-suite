@@ -1,23 +1,20 @@
 'use client';
 
 import { useEffect } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { setUnauthorizedHandler } from '@/lib/apiClient';
-import { useAuth } from './AuthContext';
+import { useLogout } from '@/hooks/useLogout';
 
 export function AuthSessionGuard() {
-  const { logout } = useAuth();
-  const router = useRouter();
+  const signOut = useLogout();
   const pathname = usePathname();
 
   useEffect(() => {
     setUnauthorizedHandler(() => {
-      logout();
-      const redirect = encodeURIComponent(pathname);
-      router.replace(`/auth?redirect=${redirect}`);
+      signOut(pathname);
     });
     return () => setUnauthorizedHandler(null);
-  }, [logout, router, pathname]);
+  }, [signOut, pathname]);
 
   return null;
 }
