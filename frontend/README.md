@@ -76,7 +76,7 @@ Cierra sesión y vuelve a entrar para ver el enlace **Admin** en la navbar.
 4. En Render, actualiza `CORS_ORIGIN` y `FRONTEND_URL` con la URL de Vercel.
 5. Tras `git push`, Vercel redeploya solo.
 
-El repo incluye `vercel.json` en la raíz que apunta los comandos de build a `frontend/`.
+Con **Root Directory** = `frontend`, los comandos de install/build deben ser los por defecto (`npm install`, `npm run build`). No uses `--prefix frontend` (duplica la carpeta).
 
 ## Demo en producción
 
