@@ -58,6 +58,12 @@ export const SIDEBAR_CATALOG: SidebarCategoryDef[] = [
     label: 'Diseño',
     tools: [
       { id: 'des-ui', name: 'Prompts de UI', shortDesc: 'Layouts y sistemas de diseño.', minPlan: 'free' },
+      {
+        id: 'des-image-gen',
+        name: 'Generador de imágenes',
+        shortDesc: 'Prompt → imagen (Pollinations).',
+        minPlan: 'basico',
+      },
       { id: 'des-brand', name: 'Guía de marca', shortDesc: 'Paleta y tono de marca.', minPlan: 'basico' },
     ],
   },

@@ -3,27 +3,38 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/components/auth/AuthContext';
+import { useDashboardStore } from '@/store/useDashboardStore';
 
 const SUGGESTIONS = [
   {
+    label: 'Generar imagen',
+    prompt: 'Logo minimalista Astryx AI Suite, plateado y negro, estilo tech premium',
+    toolId: 'des-image-gen',
+    toolName: 'Generador de imágenes',
+  },
+  {
     label: 'Generar código',
     prompt: 'Genera TypeScript listo para producción para un cliente REST con manejo de errores.',
+    toolId: 'dev-code-assistant',
+    toolName: 'Asistente de código',
   },
   {
     label: 'Ideas de marketing',
     prompt: 'Propón 5 ángulos de campaña para el lanzamiento de un SaaS B2B.',
+    toolId: 'mkt-ads',
+    toolName: 'Creador de anuncios',
   },
   {
-    label: 'Analizar documentos',
-    prompt: 'Resume riesgos y acciones a partir de este memo de estrategia.',
+    label: 'Redactor SEO',
+    prompt: 'Escribe meta title y meta description para una landing de suite de IA.',
+    toolId: 'mkt-seo',
+    toolName: 'Redactor SEO',
   },
   {
-    label: 'Estrategia de startup',
+    label: 'Estrategia startup',
     prompt: 'Define un GTM de 12 semanas para una suite de productividad con IA.',
-  },
-  {
-    label: 'Preguntar a Astryx',
-    prompt: '¿Qué debería construir a continuación para mis usuarios?',
+    toolId: 'biz-strategy',
+    toolName: 'Estrategia startup',
   },
 ];
 
@@ -33,7 +44,13 @@ type Props = {
 
 export function WelcomeHero({ onPick }: Props) {
   const { user } = useAuth();
+  const selectTool = useDashboardStore((s) => s.selectTool);
   const first = user?.name?.trim()?.split(/\s+/)?.[0] ?? 'Explorador';
+
+  function handlePick(s: (typeof SUGGESTIONS)[number]) {
+    selectTool(s.toolId, s.toolName);
+    onPick(s.prompt);
+  }
 
   return (
     <div className="dashboard-hero relative flex flex-col items-center px-4 pb-8 pt-6 md:px-8">
@@ -50,8 +67,8 @@ export function WelcomeHero({ onPick }: Props) {
           Hola de nuevo, {first}
         </h1>
         <p className="mx-auto max-w-xl text-base text-[var(--dash-text-muted)] md:text-lg">
-          ¿Listo para construir con IA? Elige una sugerencia o escribe abajo — tu espacio de trabajo
-          premium.
+          Elige una herramienta o escribe abajo. Las respuestas vienen del backend con Groq,
+          OpenRouter o Pollinations.
         </p>
       </motion.div>
 
@@ -70,11 +87,11 @@ export function WelcomeHero({ onPick }: Props) {
             transition={{ delay: 0.08 * i, duration: 0.35 }}
             whileHover={{ scale: 1.01, y: -1 }}
             whileTap={{ scale: 0.99 }}
-            onClick={() => onPick(s.prompt)}
+            onClick={() => handlePick(s)}
             className="dashboard-suggestion group rounded-2xl px-4 py-4 text-left transition"
           >
             <span className="block text-sm font-semibold">{s.label}</span>
-            <span className="dashboard-suggestion-desc mt-1 block text-xs">Haz clic para enviar</span>
+            <span className="dashboard-suggestion-desc mt-1 block text-xs">{s.toolName}</span>
           </motion.button>
         ))}
       </motion.div>

@@ -1479,6 +1479,24 @@ html[data-theme='dark'] .payment-modal-error {
   color: var(--dash-text-muted);
 }
 
+.dashboard-context-upload {
+  border-color: var(--dash-border);
+  background: var(--dash-surface-elevated);
+  color: var(--dash-text);
+}
+
+.dashboard-context-selected,
+.dashboard-context-file {
+  border-color: var(--dash-border);
+  background: var(--dash-surface-elevated);
+  color: var(--dash-text);
+}
+
+.dashboard-context-file--active {
+  border-color: var(--dash-accent, #8b5cf6);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--dash-accent, #8b5cf6) 35%, transparent);
+}
+
 .dash-plan-badge--free {
   border: 1px solid var(--dash-border);
   background: var(--dash-hover);

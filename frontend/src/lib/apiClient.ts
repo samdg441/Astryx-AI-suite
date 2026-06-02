@@ -138,3 +138,37 @@ export async function apiFetchList<T>(
     meta: parsed?.meta ?? { page: 1, limit: 10, total: 0, totalPages: 0 },
   };
 }
+
+type ApiUploadOptions = {
+  token: string;
+  formData: FormData;
+};
+
+export async function apiUpload<T>(path: string, { token, formData }: ApiUploadOptions): Promise<T> {
+  const response = await fetch(`${getApiBaseUrl()}${path}`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData,
+  });
+
+  if (response.status === 401) {
+    unauthorizedHandler?.();
+    throw new Error('Sesión expirada. Inicia sesión de nuevo.');
+  }
+
+  const parsed = (await parseJson(response)) as ApiErrorBody & { data?: T } | null;
+
+  if (!response.ok) {
+    throw new ApiRequestError(
+      getErrorMessage(parsed, `Error ${response.status}`),
+      response.status,
+      parsed?.issues
+    );
+  }
+
+  if (parsed && typeof parsed === 'object' && 'data' in parsed) {
+    return parsed.data as T;
+  }
+
+  return parsed as T;
+}

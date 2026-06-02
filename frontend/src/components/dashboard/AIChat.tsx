@@ -3,16 +3,41 @@
 import React, { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Send, Loader2 } from 'lucide-react';
+import { useChatSend } from '@/hooks/useChatSend';
 import { useDashboardStore } from '@/store/useDashboardStore';
 import { cn } from '@/lib/cn';
+
+function ChatBubbleContent({ message }: { message: { content: string; imageUrl?: string; providerLabel?: string; role: string } }) {
+  return (
+    <>
+      {message.role === 'assistant' && message.providerLabel && (
+        <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider opacity-60">
+          {message.providerLabel}
+        </p>
+      )}
+      <p className="whitespace-pre-wrap break-words">{message.content}</p>
+      {message.imageUrl && (
+        <div className="mt-3 overflow-hidden rounded-xl border border-[var(--dash-border)]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={message.imageUrl}
+            alt="Imagen generada por IA"
+            className="max-h-[min(420px,50vh)] w-full object-contain bg-[var(--dash-surface-elevated)]"
+            loading="lazy"
+          />
+        </div>
+      )}
+    </>
+  );
+}
 
 export function AIChat() {
   const messages = useDashboardStore((s) => s.messages);
   const input = useDashboardStore((s) => s.input);
   const setInput = useDashboardStore((s) => s.setInput);
-  const isTyping = useDashboardStore((s) => s.isTyping);
-  const sendUserFlow = useDashboardStore((s) => s.sendUserFlow);
   const selectedToolName = useDashboardStore((s) => s.selectedToolName);
+  const selectedFileName = useDashboardStore((s) => s.selectedFileName);
+  const { send, isTyping } = useChatSend();
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -22,6 +47,11 @@ export function AIChat() {
   const placeholder = selectedToolName
     ? `Pregunta a ${selectedToolName}…`
     : 'Describe lo que quieres lograr con Astryx…';
+
+  function handleSubmit(e?: React.FormEvent) {
+    e?.preventDefault();
+    void send(input);
+  }
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
@@ -39,7 +69,7 @@ export function AIChat() {
                 m.role === 'user' ? 'dashboard-bubble-user' : 'dashboard-bubble-ai'
               )}
             >
-              {m.content}
+              <ChatBubbleContent message={m} />
             </div>
           </motion.div>
         ))}
@@ -55,23 +85,29 @@ export function AIChat() {
       </div>
 
       <div className="dashboard-chat-footer border-t p-3 md:p-4">
-        <form
-          className="mx-auto flex max-w-4xl gap-2"
-          onSubmit={(e) => {
-            e.preventDefault();
-            sendUserFlow(input);
-          }}
-        >
+        {selectedFileName && (
+          <p className="text-muted mx-auto mb-2 max-w-4xl text-xs">
+            Archivo adjunto:{' '}
+            <span className="text-heading font-medium">{selectedFileName}</span>
+          </p>
+        )}
+        {selectedToolName && (
+          <p className="text-muted mx-auto mb-2 max-w-4xl text-xs">
+            Herramienta activa: <span className="text-heading font-medium">{selectedToolName}</span>
+          </p>
+        )}
+        <form className="mx-auto flex max-w-4xl gap-2" onSubmit={handleSubmit}>
           <textarea
             rows={1}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder={placeholder}
-            className="dashboard-chat-input max-h-40 min-h-[52px] w-full flex-1 resize-none rounded-2xl px-4 py-3.5 text-sm transition md:text-[15px]"
+            disabled={isTyping}
+            className="dashboard-chat-input max-h-40 min-h-[52px] w-full flex-1 resize-none rounded-2xl px-4 py-3.5 text-sm transition disabled:opacity-60 md:text-[15px]"
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                sendUserFlow(input);
+                handleSubmit();
               }
             }}
           />
