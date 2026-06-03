@@ -86,9 +86,7 @@ export function AdminContactLeadsPage() {
           <p className="text-muted glass-panel p-6">Cargando…</p>
         ) : leads.length === 0 ? (
           <p className="text-muted glass-panel p-6">
-            No hay mensajes. Si acabas de desplegar, ejecuta{' '}
-            <code className="text-xs">npx prisma migrate deploy</code> en el backend para crear la
-            tabla <code className="text-xs">contactos</code>.
+            No hay mensajes.
           </p>
         ) : (
           leads.map((lead) => (

@@ -95,13 +95,6 @@ export const PLAN_CATALOG: Record<PlanKey, PlanInfo> = {
   },
 };
 
-/** @deprecated Usa PLAN_CATALOG */
-export const PLAN_DETAILS = {
-  basico: PLAN_CATALOG.basico,
-  pro: PLAN_CATALOG.pro,
-  empresarial: PLAN_CATALOG.empresarial,
-};
-
 export function normalizePlanKey(plan: string | null | undefined): PlanKey {
   if (!plan || plan === '' || plan === 'sin_plan') return 'sin_plan';
   if (plan in PLAN_CATALOG) return plan as PlanKey;

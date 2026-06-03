@@ -12,9 +12,6 @@ type Props = {
   children: React.ReactNode;
 };
 
-/**
- * Wrapper opcional: al hacer clic en children, bloquea y abre modal premium si no alcanza el plan.
- */
 export function ProtectedTool({ minPlan, toolName, children }: Props) {
   const { user } = useAuth();
   const openPremium = useDashboardStore((s) => s.openPremiumModal);

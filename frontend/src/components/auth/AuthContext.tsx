@@ -18,11 +18,9 @@ const STORAGE_USER = 'astryx_auth_user';
 type AuthContextValue = {
   user: AuthUser | null;
   token: string | null;
-  /** true tras leer localStorage en el cliente (evita redirecciones prematuras en /auth). */
   isHydrated: boolean;
   setSession: (payload: { user: AuthUser; token: string }) => void;
   logout: () => void;
-  /** Sincroniza plan/suscripción con el servidor (tras checkout o webhook). */
   refreshUser: () => Promise<void>;
 };
 
@@ -70,7 +68,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  /** Tras hidratar token desde localStorage, alinear plan con el backend. */
   useEffect(() => {
     if (!token) return;
     void refreshUser();

@@ -20,7 +20,6 @@ function useLiteBackground() {
   return lite;
 }
 
-/** Fondo dinámico: video espacial (oscuro) o gradiente estático (claro, sin blur animado). */
 export function AppBackground() {
   const { theme } = useTheme();
   const lite = useLiteBackground();

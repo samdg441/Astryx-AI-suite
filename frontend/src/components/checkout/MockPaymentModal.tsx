@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { CreditCard, Loader2, Lock, ShieldCheck, Sparkles, X } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useMockCheckout } from '@/hooks/useMockCheckout';
-import { PLAN_DETAILS, planLabel } from '@/lib/planCatalog';
+import { PLAN_CATALOG, planLabel } from '@/lib/planCatalog';
 import {
   formatCardNumber,
   formatExpiry,
@@ -40,7 +40,7 @@ export function MockPaymentModal({ open, plan, onClose, onSuccess, redirectTo }:
   const [fieldError, setFieldError] = useState<string | null>(null);
 
   const paidPlan = plan === 'basico' || plan === 'pro' || plan === 'empresarial';
-  const details = paidPlan ? PLAN_DETAILS[plan] : null;
+  const details = paidPlan ? PLAN_CATALOG[plan] : null;
 
   useEffect(() => {
     if (!open) return;

@@ -5,6 +5,7 @@ import {
   isLikelyJwt,
   parseAuthCookieValue,
 } from '@/lib/authCookies';
+import { decodeJwtPayload, isAdminRole } from '@/lib/jwtPayload';
 
 const PROTECTED_PREFIXES = ['/dashboard', '/admin'];
 
@@ -27,6 +28,16 @@ export function middleware(request: NextRequest) {
     url.pathname = '/auth';
     url.searchParams.set('redirect', pathname);
     return NextResponse.redirect(url);
+  }
+
+  if (pathname.startsWith('/admin') && token) {
+    const claims = decodeJwtPayload(token);
+    if (!isAdminRole(claims)) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/dashboard';
+      url.search = '';
+      return NextResponse.redirect(url);
+    }
   }
 
   if (pathname === '/auth' && token) {

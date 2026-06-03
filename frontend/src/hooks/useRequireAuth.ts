@@ -4,9 +4,6 @@ import { useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from './useAuth';
 
-/**
- * Redirige a /auth si no hay token (complementa middleware + cookie).
- */
 export function useRequireAuth() {
   const { token, user } = useAuth();
   const router = useRouter();

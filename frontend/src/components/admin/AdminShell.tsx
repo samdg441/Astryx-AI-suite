@@ -44,9 +44,8 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       <div className="mx-auto w-full max-w-6xl flex-1 px-5 pb-16 pt-28 sm:px-8">
         <div className="mb-8">
           <h1 className="text-heading text-3xl font-bold sm:text-4xl">Panel de administración</h1>
-          <p className="text-muted mt-2">
-            Usuarios, herramientas IA y contactos. Usa el botón sol/luna de la barra superior para
-            modo claro u oscuro.
+          <p className="text-muted">
+            Usuarios, herramientas IA y contactos.
           </p>
         </div>
         <nav className="mb-8 flex flex-wrap gap-2">

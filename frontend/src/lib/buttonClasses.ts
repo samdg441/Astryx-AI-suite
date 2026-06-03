@@ -8,7 +8,6 @@ function variantClass(variant: ButtonVariant): string {
   return 'btn-primary';
 }
 
-/** Clases para enlaces o botones con estilo unificado */
 export function buttonLinkClass(variant: ButtonVariant = 'primary', className?: string): string {
   return cn(variantClass(variant), className);
 }

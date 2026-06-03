@@ -1,4 +1,3 @@
-/** Plan mínimo por herramienta (debe coincidir con CHECK en BD). */
 export type ToolMinPlan = 'free' | 'basico' | 'pro' | 'empresarial';
 
 export type SidebarToolDef = {

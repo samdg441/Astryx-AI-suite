@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef } from 'react';
 
-/** Velocidad del fondo (< 1 = más lento, más “cinemático”). */
 const PLAYBACK_RATE = 0.62;
 
 export default function BackgroundVideo() {

@@ -11,7 +11,6 @@ export function planRank(plan: string | undefined | null): number {
   return RANK[plan] ?? 0;
 }
 
-/** true si el plan del usuario alcanza el mínimo exigido por la herramienta */
 export function canAccessPlan(userPlan: string | undefined | null, requiredPlan: string | undefined | null): boolean {
   const req = requiredPlan ?? "free";
   return planRank(userPlan) >= planRank(req);

@@ -85,8 +85,7 @@ export function ContextPanel() {
     <aside className="dashboard-context hidden w-72 shrink-0 border-l p-4 text-xs xl:flex xl:flex-col">
       <p className="mb-1 font-semibold uppercase tracking-wider">Contexto</p>
       <p className="mb-4 leading-relaxed">
-        Sube un PDF o TXT, selecciónalo y pregunta en el chat. La IA usará su contenido para
-        responderte.
+        Sube PDF o TXT, selecciónalo y pregunta en el chat.
       </p>
 
       <input
@@ -144,7 +143,7 @@ export function ContextPanel() {
         )}
 
         {!loading && files.length === 0 && (
-          <p className="py-2 leading-relaxed opacity-70">Aún no tienes archivos. Sube un PDF.</p>
+          <p className="leading-relaxed opacity-70">Aún no hay archivos.</p>
         )}
 
         {files.map((file) => {

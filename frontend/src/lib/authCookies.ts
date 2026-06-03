@@ -1,4 +1,3 @@
-/** Cookie espejo del token (para middleware de Next.js; localStorage sigue siendo la fuente en cliente). */
 export const AUTH_COOKIE_NAME = 'astryx_auth_token';
 
 function cookieSecureSuffix(): string {
@@ -24,7 +23,7 @@ export function isLikelyJwt(token: string): boolean {
 
 export function setAuthCookie(token: string) {
   if (typeof document === 'undefined') return;
-  const maxAge = 60 * 60 * 24 * 7; // 7 días
+  const maxAge = 60 * 60 * 24 * 7;
   document.cookie = `${AUTH_COOKIE_NAME}=${encodeURIComponent(token)}; path=/; max-age=${maxAge}; SameSite=Lax${cookieSecureSuffix()}`;
 }
 
