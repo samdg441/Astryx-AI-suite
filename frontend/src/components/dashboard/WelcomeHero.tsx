@@ -68,7 +68,7 @@ export function WelcomeHero({ onPick }: Props) {
         </h1>
         <p className="mx-auto max-w-xl text-base text-[var(--dash-text-muted)] md:text-lg">
           Elige una herramienta o escribe abajo. Las respuestas vienen del backend con Groq,
-          OpenRouter o Pollinations.
+          OpenRouter o Cloudflare Workers AI.
         </p>
       </motion.div>
 

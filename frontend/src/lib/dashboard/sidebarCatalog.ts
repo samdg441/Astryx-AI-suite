@@ -60,7 +60,7 @@ export const SIDEBAR_CATALOG: SidebarCategoryDef[] = [
       {
         id: 'des-image-gen',
         name: 'Generador de imágenes',
-        shortDesc: 'Prompt → imagen (Pollinations).',
+        shortDesc: 'Prompt → imagen (Cloudflare).',
         minPlan: 'basico',
       },
       { id: 'des-brand', name: 'Guía de marca', shortDesc: 'Paleta y tono de marca.', minPlan: 'basico' },

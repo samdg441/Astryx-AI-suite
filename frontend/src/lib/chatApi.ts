@@ -1,6 +1,6 @@
 import { apiFetch } from './apiClient';
 
-export type ChatProviderId = 'pollinations' | 'openrouter' | 'groq';
+export type ChatProviderId = 'cloudflare' | 'openrouter' | 'groq';
 
 export type ChatResponse = {
   provider: ChatProviderId;
