@@ -2,10 +2,22 @@
 
 import React, { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Send, Loader2 } from 'lucide-react';
+import { Send, Loader2, Download } from 'lucide-react';
 import { useChatSend } from '@/hooks/useChatSend';
 import { useDashboardStore } from '@/store/useDashboardStore';
 import { cn } from '@/lib/cn';
+
+function buildImageFileName(content: string): string {
+  const match = content.match(/«(.+?)»/);
+  const base = (match?.[1] ?? 'imagen')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 50);
+  return `astryx-${base || 'imagen'}.jpeg`;
+}
 
 function ChatBubbleContent({ message }: { message: { content: string; imageUrl?: string; providerLabel?: string; role: string } }) {
   return (
@@ -17,7 +29,7 @@ function ChatBubbleContent({ message }: { message: { content: string; imageUrl?:
       )}
       <p className="whitespace-pre-wrap break-words">{message.content}</p>
       {message.imageUrl && (
-        <div className="mt-3 overflow-hidden rounded-xl border border-[var(--dash-border)]">
+        <div className="group relative mt-3 overflow-hidden rounded-xl border border-[var(--dash-border)]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={message.imageUrl}
@@ -25,6 +37,16 @@ function ChatBubbleContent({ message }: { message: { content: string; imageUrl?:
             className="max-h-[min(420px,50vh)] w-full object-contain bg-[var(--dash-surface-elevated)]"
             loading="lazy"
           />
+          <a
+            href={message.imageUrl}
+            download={buildImageFileName(message.content)}
+            title="Descargar imagen"
+            aria-label="Descargar imagen"
+            className="absolute right-2 top-2 inline-flex items-center gap-1.5 rounded-lg bg-black/55 px-2.5 py-1.5 text-xs font-medium text-white opacity-0 backdrop-blur-sm transition hover:bg-black/75 focus:opacity-100 group-hover:opacity-100"
+          >
+            <Download className="h-3.5 w-3.5" />
+            Descargar
+          </a>
         </div>
       )}
     </>
